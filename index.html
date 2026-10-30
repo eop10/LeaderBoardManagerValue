@@ -59,6 +59,9 @@ button{font-family:inherit;}
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <sc-if value="{{ showRosterBtn }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ openRoster }}" style="height:40px;padding:0 14px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#006d30;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:6px;" style-hover="background:#f2f7f4;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';">groups</span>Состав</button>
+        </sc-if>
         <sc-if value="{{ isActive }}" hint-placeholder-val="{{ true }}">
           <button onClick="{{ openFinish }}" style="height:40px;padding:0 18px;border-radius:8px;background:#ffffff;border:1px solid #0E9344;color:#0E9344;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#eef8f1;">Завершить сезон</button>
         </sc-if>
@@ -82,8 +85,22 @@ button{font-family:inherit;}
             <button onClick="{{ tryStart }}" style="height:40px;padding:0 18px;border-radius:8px;background:#0E9344;border:1px solid #0E9344;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#0b7d39;">Начать оценку</button>
           </sc-if>
           <sc-if value="{{ cannotStart }}" hint-placeholder-val="{{ true }}">
-            <button disabled="{{ true }}" title="Добавьте хотя бы один заполненный критерий" style="height:40px;padding:0 18px;border-radius:8px;background:#d3dade;border:1px solid #d3dade;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:not-allowed;">Начать оценку</button>
+            <button disabled="{{ true }}" title="{{ startHint }}" style="height:40px;padding:0 18px;border-radius:8px;background:#d3dade;border:1px solid #d3dade;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:not-allowed;">Начать оценку</button>
           </sc-if>
+        </sc-if>
+        <sc-if value="{{ showSeasonMenu }}" hint-placeholder-val="{{ true }}">
+          <div style="position:relative;">
+            <button onClick="{{ toggleSeasonMenu }}" aria-label="Действия с сезоном" aria-expanded="{{ seasonMenuOpen }}" style="width:40px;height:40px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#3f484c;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;" style-hover="background:#f0f4f6;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';">more_vert</span></button>
+            <sc-if value="{{ seasonMenuOpen }}" hint-placeholder-val="{{ false }}">
+              <div onClick="{{ closeSeasonMenu }}" style="position:fixed;inset:0;z-index:20;"></div>
+              <div role="menu" style="position:absolute;top:calc(100% + 6px);right:0;min-width:220px;background:#ffffff;border:1px solid #dde3e7;border-radius:10px;box-shadow:0 10px 30px rgba(24,28,30,0.12);padding:6px;z-index:21;display:flex;flex-direction:column;">
+                <button role="menuitem" onClick="{{ onRename }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:none;background:transparent;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;font-weight:600;color:#181c1e;" style-hover="background:#f0f4f6;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';color:#5b6468;">edit</span>Переименовать</button>
+                <sc-if value="{{ canDeleteSeason }}" hint-placeholder-val="{{ false }}">
+                  <button role="menuitem" onClick="{{ onDeleteSeason }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:none;background:transparent;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;font-weight:600;color:#c5221f;" style-hover="background:#fdecea;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">delete</span>Удалить сезон</button>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
         </sc-if>
       </div>
     </header>
@@ -107,6 +124,24 @@ button{font-family:inherit;}
           </div>
         </sc-if>
 
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <div style="position:relative;flex:0 1 340px;min-width:220px;">
+            <span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#7a8489;pointer-events:none;">search</span>
+            <input value="{{ q }}" onChange="{{ onSearch }}" placeholder="Поиск по наставнику или команде" aria-label="Поиск по наставнику или команде" autoComplete="off" style="width:100%;height:38px;border-radius:8px;border:1px solid #cfd8dc;padding:0 36px 0 38px;font-family:inherit;font-size:14px;color:#181c1e;background:#ffffff;outline:none;" style-focus="box-shadow:0 0 0 2px #00ab4f;">
+            <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ clearSearch }}" aria-label="Очистить поиск" style="width:30px;height:30px;flex:none;border:none;border-radius:6px;background:transparent;color:#5b6468;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;position:absolute;right:4px;top:4px;" style-hover="background:#f0f4f6;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">close</span></button>
+            </sc-if>
+          </div>
+          <sc-if value="{{ showSort }}" hint-placeholder-val="{{ true }}">
+            <div role="group" aria-label="Сортировка" style="display:flex;gap:2px;padding:3px;border-radius:8px;background:#eceff1;">
+              <button aria-pressed="{{ sortA.pressed }}" onClick="{{ onSortOrder }}" style="height:32px;padding:0 12px;border:none;border-radius:6px;background:{{ sortA.bg }};color:{{ sortA.color }};box-shadow:{{ sortA.shadow }};font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;">Как в составе</button>
+              <button aria-pressed="{{ sortB.pressed }}" onClick="{{ onSortRating }}" style="height:32px;padding:0 12px;border:none;border-radius:6px;background:{{ sortB.bg }};color:{{ sortB.color }};box-shadow:{{ sortB.shadow }};font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;">По рейтингу</button>
+            </div>
+          </sc-if>
+          <button onClick="{{ onExport }}" style="height:40px;padding:0 14px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#006d30;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:6px;height:38px;margin-left:auto;" style-hover="background:#f2f7f4;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';">download</span>Экспорт CSV</button>
+        </div>
+
+        <sc-if value="{{ showSeasonGrid }}" hint-placeholder-val="{{ true }}">
         <div style="flex:0 1 auto;min-height:200px;background:#ffffff;border:1px solid #d5dde2;border-radius:10px;overflow:auto;">
           <div role="table" style="min-width:{{ tableMinWidth }}px;font-size:14px;">
             <div role="row" style="display:flex;background:#f0f4f6;border-bottom:1px solid #d5dde2;position:sticky;top:0;z-index:5;">
@@ -133,7 +168,12 @@ button{font-family:inherit;}
                   <div style="flex:1;min-width:0;">
                     <sc-for list="{{ m.rows }}" as="r" hint-placeholder-count="2">
                       <div role="row" style="display:grid;grid-template-columns:{{ innerCols }};min-height:48px;border-bottom:1px solid #e6ebee;">
-                        <div role="cell" style="padding:8px 14px;display:flex;align-items:center;font-weight:500;line-height:1.3;">{{ r.team }}</div>
+                        <div role="cell" style="padding:8px 8px 8px 14px;display:flex;align-items:center;justify-content:space-between;gap:6px;font-weight:500;line-height:1.3;">
+                          <span style="min-width:0;">{{ r.team }}</span>
+                          <sc-if value="{{ r.showCommentBtn }}" hint-placeholder-val="{{ false }}">
+                            <button onClick="{{ r.onComment }}" aria-label="{{ r.commentLabel }}" title="{{ r.commentTitle }}" style="width:30px;height:30px;flex:none;border:none;border-radius:6px;background:transparent;color:#5b6468;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;color:{{ r.commentColor }};" style-hover="background:#f0f4f6;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';font-variation-settings:{{ r.commentFill }};">chat_bubble</span></button>
+                          </sc-if>
+                        </div>
                         <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4">
                           <div role="cell" style="border-left:1px solid #e6ebee;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:6px;background:{{ c.bg }};">
                             <sc-if value="{{ c.editable }}" hint-placeholder-val="{{ true }}">
@@ -177,6 +217,48 @@ button{font-family:inherit;}
             </sc-for>
           </div>
         </div>
+        </sc-if>
+
+        <sc-if value="{{ showSumGrid }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:0 1 auto;min-height:120px;background:#ffffff;border:1px solid #d5dde2;border-radius:10px;overflow:auto;">
+            <div role="table" style="min-width:{{ sumMinWidth }}px;font-size:14px;">
+              <div role="row" style="display:grid;grid-template-columns:{{ sumCols }};background:#f0f4f6;border-bottom:1px solid #d5dde2;position:sticky;top:0;z-index:5;">
+                <div role="columnheader" style="padding:10px 14px;display:flex;align-items:center;font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#5b6468;">№</div>
+                <div role="columnheader" style="padding:10px 14px;border-left:1px solid #d5dde2;display:flex;align-items:center;font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#5b6468;">Наставник</div>
+                <sc-for list="{{ sumHeads }}" as="h" hint-placeholder-count="3">
+                  <div role="columnheader" style="padding:10px;border-left:1px solid #d5dde2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+                    <div style="font-weight:700;font-size:13px;line-height:1.3;color:#181c1e;">{{ h.name }}</div>
+                    <div style="font-size:12px;color:#7a8489;margin-top:2px;">{{ h.sub }}</div>
+                  </div>
+                </sc-for>
+                <div role="columnheader" style="padding:10px 14px;border-left:1px solid #d5dde2;display:flex;align-items:center;font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#5b6468;">Итог</div>
+              </div>
+              <sc-for list="{{ sumRows }}" as="r" hint-placeholder-count="6">
+                <div role="row" style="display:grid;grid-template-columns:{{ sumCols }};min-height:52px;border-bottom:1px solid #e6ebee;">
+                  <div role="cell" style="padding:8px 14px;display:flex;align-items:center;font-family:Manrope,sans-serif;font-weight:800;font-size:16px;color:#5b6468;font-variant-numeric:tabular-nums;">{{ r.rank }}</div>
+                  <div role="cell" style="padding:8px 14px;border-left:1px solid #e6ebee;display:flex;align-items:center;font-weight:700;line-height:1.35;">{{ r.name }}</div>
+                  <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="3">
+                    <div role="cell" style="border-left:1px solid #e6ebee;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;color:{{ c.color }};">{{ c.text }}</div>
+                  </sc-for>
+                  <div role="cell" style="padding:8px 14px;border-left:1px solid #e6ebee;background:#f6f4fe;display:flex;align-items:baseline;gap:8px;">
+                    <span style="font-family:Manrope,sans-serif;font-weight:800;font-size:22px;line-height:1.2;font-variant-numeric:tabular-nums;color:{{ r.overallColor }};">{{ r.overallText }}</span>
+                    <span style="font-size:12px;color:#5b6468;white-space:nowrap;">{{ r.overallSub }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <p style="margin:0;max-width:720px;font-size:13px;line-height:1.5;color:#5b6468;text-wrap:pretty;">Итог — среднее рейтингов наставника по сезонам, где у него есть хотя бы одна полностью оценённая команда. Пустая ячейка означает, что наставник не участвовал в сезоне.</p>
+        </sc-if>
+        <sc-if value="{{ sumEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:40px 16px;text-align:center;background:#ffffff;border:1px solid #d5dde2;border-radius:10px;color:#5b6468;font-size:14px;">Пока нет сезонов с оценками</div>
+        </sc-if>
+        <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:40px 16px;background:#ffffff;border:1px solid #d5dde2;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;">
+            <span style="font-weight:700;font-size:15px;color:#181c1e;">Ничего не найдено</span>
+            <span style="font-size:14px;color:#5b6468;">{{ noResultsText }}</span>
+          </div>
+        </sc-if>
       </sc-if>
 
       <sc-if value="{{ isDraft }}" hint-placeholder-val="{{ false }}">
@@ -219,6 +301,10 @@ button{font-family:inherit;}
             <div style="font-family:Manrope,sans-serif;font-weight:700;font-size:16px;">Сводка</div>
             <div style="font-size:15px;font-variant-numeric:tabular-nums;">{{ critCountText }}</div>
             <div style="font-size:15px;font-variant-numeric:tabular-nums;">{{ maxSumText }}</div>
+            <div style="display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding-top:10px;border-top:1px solid #e3e8eb;">
+              <span style="font-size:15px;font-variant-numeric:tabular-nums;">{{ rosterLine }}</span>
+              <button onClick="{{ openRoster }}" style="border:none;background:transparent;padding:0;font-size:13px;font-weight:700;color:#0E9344;cursor:pointer;text-decoration:underline;">Изменить состав</button>
+            </div>
             <div style="display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:8px;background:#f0f4f6;font-size:13px;line-height:1.45;color:#3f484c;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';color:#5b6468;">info</span>После начала оценки критерии нельзя изменить</div>
           </aside>
         </div>
@@ -228,7 +314,11 @@ button{font-family:inherit;}
 
     <footer style="flex:none;z-index:4;background:#ffffff;border-top:1px solid #dde3e7;padding:10px 32px;display:flex;align-items:center;gap:16px;">
       <span style="flex:none;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#5b6468;">Сезоны</span>
-      <div role="tablist" aria-label="Сезоны" style="flex:1;min-width:0;display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;padding:2px;">
+      <div ref="{{ tabsRef }}" role="tablist" aria-label="Сезоны" style="flex:1;min-width:0;display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;padding:2px;">
+        <button role="tab" aria-selected="{{ allTab.selected }}" onClick="{{ allTab.onClick }}" style="flex:none;width:128px;padding:8px 12px;border-radius:8px;border:1px solid {{ allTab.border }};background:{{ allTab.bg }};color:{{ allTab.color }};display:flex;flex-direction:column;align-items:flex-start;gap:3px;cursor:pointer;text-align:left;" style-hover="border-color:#00ab4f;">
+          <span style="font-family:'Material Symbols Outlined';font-size:22px;line-height:1;text-transform:none;font-feature-settings:'liga';">functions</span>
+          <span style="font-size:12px;font-weight:600;white-space:nowrap;">Все сезоны</span>
+        </button>
         <sc-for list="{{ seasonCells }}" as="s" hint-placeholder-count="4">
           <button role="tab" aria-selected="{{ s.selected }}" title="{{ s.statusLabel }}" onClick="{{ s.onClick }}" style="flex:none;width:128px;padding:8px 12px;border-radius:8px;border:1px solid {{ s.border }};background:{{ s.bg }};color:{{ s.color }};display:flex;flex-direction:column;align-items:flex-start;gap:3px;cursor:pointer;text-align:left;" style-hover="border-color:#00ab4f;">
             <span style="display:flex;align-items:center;justify-content:space-between;width:100%;">
@@ -239,9 +329,84 @@ button{font-family:inherit;}
           </button>
         </sc-for>
       </div>
+      <button onClick="{{ openCreate }}" style="flex:none;align-self:stretch;width:128px;padding:8px 12px;border-radius:8px;border:1px dashed #0E9344;background:#ffffff;color:#0E9344;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;cursor:pointer;text-align:left;" style-hover="background:#eef8f1;">
+        <span style="font-family:'Material Symbols Outlined';font-size:22px;line-height:1;text-transform:none;font-feature-settings:'liga';">add</span>
+        <span style="font-size:12px;font-weight:700;white-space:nowrap;">Новый сезон</span>
+      </button>
     </footer>
   </main>
 </div>
+
+<sc-if value="{{ rosterOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeRoster }}" style="position:fixed;inset:0;background:rgba(24,28,30,0.3);z-index:40;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#181c1e;">
+    <aside role="dialog" aria-modal="true" aria-labelledby="roster-title" onClick="{{ stop }}" style="position:absolute;top:0;right:0;bottom:0;width:460px;max-width:100%;background:#ffffff;box-shadow:-10px 0 30px rgba(24,28,30,0.15);display:flex;flex-direction:column;">
+      <div style="flex:none;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 20px 16px;border-bottom:1px solid #e3e8eb;">
+        <div style="display:flex;flex-direction:column;gap:4px;min-width:0;">
+          <h2 id="roster-title" style="margin:0;font-family:Manrope,sans-serif;font-weight:700;font-size:20px;line-height:1.3;">{{ rosterTitle }}</h2>
+          <span style="font-size:13px;color:#5b6468;">{{ rosterSummary }}</span>
+        </div>
+        <button onClick="{{ closeRoster }}" aria-label="Закрыть" style="width:30px;height:30px;flex:none;border:none;border-radius:6px;background:transparent;color:#5b6468;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;width:36px;height:36px;" style-hover="background:#f0f4f6;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';">close</span></button>
+      </div>
+      <div style="flex:1;min-height:0;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;">
+        <sc-for list="{{ rosterMentors }}" as="m" hint-placeholder-count="3">
+          <div style="border:1px solid #d5dde2;border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:30px;">
+              <span style="font-weight:700;font-size:15px;">{{ m.name }}</span>
+              <div style="display:flex;align-items:center;gap:4px;">
+                <span style="font-size:12px;color:#5b6468;white-space:nowrap;">{{ m.countText }}</span>
+                <sc-if value="{{ m.canDelete }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ m.onDelete }}" aria-label="Удалить наставника" style="width:30px;height:30px;flex:none;border:none;border-radius:6px;background:transparent;color:#5b6468;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;" style-hover="background:#fdecea;color:#c5221f;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">delete</span></button>
+                </sc-if>
+              </div>
+            </div>
+            <sc-for list="{{ m.teams }}" as="t" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span style="flex:1;min-width:0;font-size:14px;font-weight:500;">{{ t.name }}</span>
+                <select value="{{ t.mentorId }}" onChange="{{ t.onMove }}" aria-label="{{ t.moveLabel }}" style="flex:none;width:160px;height:32px;border-radius:6px;border:1px solid #cfd8dc;background:#ffffff;font-family:inherit;font-size:13px;color:#3f484c;padding:0 6px;cursor:pointer;">
+                  <sc-for list="{{ t.options }}" as="o" hint-placeholder-count="0"><option value="{{ o.id }}">{{ o.name }}</option></sc-for>
+                </select>
+                <button onClick="{{ t.onRemove }}" aria-label="{{ t.removeLabel }}" style="width:30px;height:30px;flex:none;border:none;border-radius:6px;background:transparent;color:#5b6468;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;" style-hover="background:#fdecea;color:#c5221f;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">close</span></button>
+              </div>
+            </sc-for>
+            <div style="display:flex;gap:8px;">
+              <input value="{{ m.input }}" onChange="{{ m.onInput }}" onKeyDown="{{ m.onKey }}" placeholder="Название команды" aria-label="Новая команда" style="height:34px;border-radius:6px;padding:0 10px;font-family:inherit;font-size:13px;color:#181c1e;background:#ffffff;outline:none;flex:1;min-width:0;border:1px solid {{ m.inputBorder }};" style-focus="box-shadow:0 0 0 2px #00ab4f;">
+              <button onClick="{{ m.onAdd }}" style="height:34px;padding:0 12px;border-radius:6px;border:1px dashed #0E9344;background:transparent;color:#0E9344;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#eef8f1;">+ Команда</button>
+            </div>
+            <sc-if value="{{ m.hasErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#c5221f;font-weight:600;">{{ m.err }}</span></sc-if>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex:none;border-top:1px solid #e3e8eb;padding:14px 20px;display:flex;flex-direction:column;gap:6px;">
+        <span style="font-size:12px;font-weight:600;color:#5b6468;">Новый наставник</span>
+        <div style="display:flex;gap:8px;">
+          <input value="{{ newMentor }}" onChange="{{ onNewMentor }}" onKeyDown="{{ onNewMentorKey }}" placeholder="Фамилия И.О." aria-label="ФИО нового наставника" style="height:34px;border-radius:6px;padding:0 10px;font-family:inherit;font-size:13px;color:#181c1e;background:#ffffff;outline:none;height:38px;flex:1;min-width:0;border:1px solid {{ newMentorBorder }};" style-focus="box-shadow:0 0 0 2px #00ab4f;">
+          <button onClick="{{ onAddMentor }}" style="height:40px;padding:0 18px;border-radius:8px;background:#0E9344;border:1px solid #0E9344;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;height:38px;padding:0 14px;" style-hover="background:#0b7d39;">Добавить</button>
+        </div>
+        <sc-if value="{{ hasNewMentorErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#c5221f;font-weight:600;">{{ newMentorErr }}</span></sc-if>
+      </div>
+    </aside>
+  </div>
+</sc-if>
+
+<sc-if value="{{ commentOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ onModalCancel }}" style="position:fixed;inset:0;background:rgba(24,28,30,0.45);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;font-family:'Hanken Grotesk',system-ui,sans-serif;">
+    <div role="dialog" aria-modal="true" aria-labelledby="comment-title" onClick="{{ stop }}" style="width:480px;max-width:100%;background:#ffffff;border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 20px 50px rgba(24,28,30,0.25);">
+      <h2 id="comment-title" style="margin:0;font-family:Manrope,sans-serif;font-weight:700;font-size:20px;color:#181c1e;">{{ commentTitle }}</h2>
+      <sc-if value="{{ commentEditable }}" hint-placeholder-val="{{ true }}">
+        <textarea ref="{{ commentRef }}" rows="5" value="{{ commentText }}" onChange="{{ onCommentText }}" aria-label="Комментарий" placeholder="Что повлияло на оценку" style="border-radius:6px;border:1px solid #cfd8dc;padding:10px 12px;font-family:inherit;font-size:14px;line-height:1.5;color:#181c1e;background:#ffffff;resize:vertical;outline:none;" style-focus="box-shadow:0 0 0 2px #00ab4f;"></textarea>
+      </sc-if>
+      <sc-if value="{{ commentReadonly }}" hint-placeholder-val="{{ false }}">
+        <p style="margin:0;font-size:15px;line-height:1.55;color:#181c1e;white-space:pre-wrap;text-wrap:pretty;">{{ commentText }}</p>
+      </sc-if>
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button onClick="{{ onModalCancel }}" style="height:40px;padding:0 16px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#3f484c;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#f0f4f6;">{{ commentCancel }}</button>
+        <sc-if value="{{ commentEditable }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ onCommentSave }}" style="height:40px;padding:0 18px;border-radius:8px;background:#0E9344;border:1px solid #0E9344;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#0b7d39;">Сохранить</button>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</sc-if>
 
 <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ onModalCancel }}" style="position:fixed;inset:0;background:rgba(24,28,30,0.45);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;font-family:'Hanken Grotesk',system-ui,sans-serif;">
@@ -255,17 +420,32 @@ button{font-family:inherit;}
   </div>
 </sc-if>
 
+<sc-if value="{{ createOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ onModalCancel }}" style="position:fixed;inset:0;background:rgba(24,28,30,0.45);z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;font-family:'Hanken Grotesk',system-ui,sans-serif;">
+    <div role="dialog" aria-modal="true" aria-labelledby="create-title" onClick="{{ stop }}" style="width:460px;max-width:100%;background:#ffffff;border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:18px;box-shadow:0 20px 50px rgba(24,28,30,0.25);">
+      <h2 id="create-title" style="margin:0;font-family:Manrope,sans-serif;font-weight:700;font-size:20px;color:#181c1e;">{{ createTitle }}</h2>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <span style="font-size:12px;font-weight:600;color:#5b6468;">Название</span>
+        <input ref="{{ createNameRef }}" value="{{ createName }}" onChange="{{ onCreateName }}" onKeyDown="{{ onCreateKey }}" aria-label="Название сезона" aria-invalid="{{ hasCreateErr }}" placeholder="Осень 2027" style="height:40px;border-radius:6px;border:1px solid {{ createBorder }};padding:0 10px;font-family:inherit;font-size:14px;color:#181c1e;background:#ffffff;outline:none;" style-focus="box-shadow:0 0 0 2px #00ab4f;">
+        <sc-if value="{{ hasCreateErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#c5221f;font-weight:600;">{{ createErr }}</span></sc-if>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        <span style="font-size:12px;font-weight:600;color:#5b6468;">Период</span>
+        <input value="{{ createPeriod }}" onChange="{{ onCreatePeriod }}" onKeyDown="{{ onCreateKey }}" aria-label="Период сезона" placeholder="сен – дек 2027" style="height:40px;border-radius:6px;border:1px solid #cfd8dc;padding:0 10px;font-family:inherit;font-size:14px;color:#181c1e;background:#ffffff;outline:none;" style-focus="box-shadow:0 0 0 2px #00ab4f;">
+      </div>
+      <sc-if value="{{ createIsNew }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:8px;background:#f0f4f6;font-size:13px;line-height:1.45;color:#3f484c;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';color:#5b6468;">info</span>Сезон создаётся черновиком. Состав команд копируется из последнего сезона. Критерии можно задать вручную или скопировать из прошлого сезона.</div></sc-if>
+      <div style="display:flex;justify-content:flex-end;gap:10px;">
+        <button onClick="{{ onModalCancel }}" style="height:40px;padding:0 16px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#3f484c;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#f0f4f6;">Отмена</button>
+        <button onClick="{{ onCreateSubmit }}" style="height:40px;padding:0 18px;border-radius:8px;background:#0E9344;border:1px solid #0E9344;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#0b7d39;">{{ createBtn }}</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  MENTORS = [
-    { name: 'Соколова А.В.', teams: ['Атлас', 'Нейрон', 'Пульс кампуса'] },
-    { name: 'Миронов Д.К.', teams: ['КодМастер', 'Север'] },
-    { name: 'Лебедева Н.П.', teams: ['Вектор'] },
-    { name: 'Крылов С.И.', teams: ['Ритм', 'Бриз'] },
-    { name: 'Захаров Т.Е.', teams: ['Орбита', 'Маяк'] },
-    { name: 'Орлова М.Р.', teams: ['Прайм'] },
-  ];
+  STORE = 'mentor-eval-v2';
   FAIL_KEY = 's3|Атлас|c3';
   inputRefs = {};
   refCbs = {};
@@ -273,15 +453,23 @@ class Component extends DCLogic {
   pending = 0;
   failedOnce = false;
   uid = 0;
-  state = this.buildInitial();
+  state = this.loadInitial();
 
   buildInitial() {
+    const MENTORS = [
+      { id: 'm1', name: 'Соколова А.В.', teams: ['Атлас', 'Нейрон', 'Пульс кампуса'] },
+      { id: 'm2', name: 'Миронов Д.К.', teams: ['КодМастер', 'Север'] },
+      { id: 'm3', name: 'Лебедева Н.П.', teams: ['Вектор'] },
+      { id: 'm4', name: 'Крылов С.И.', teams: ['Ритм', 'Бриз'] },
+      { id: 'm5', name: 'Захаров Т.Е.', teams: ['Орбита', 'Маяк'] },
+      { id: 'm6', name: 'Орлова М.Р.', teams: ['Прайм'] },
+    ];
     const C1 = { id: 'c1', name: 'Регулярность встреч с командой', max: 5, desc: 'Насколько часто и стабильно наставник проводит встречи с командой в течение сезона.' };
     const C2 = { id: 'c2', name: 'Качество сопровождения', max: 5, desc: 'Насколько полезны консультации, обратная связь и помощь наставника в решении проблем команды.' };
     const C3 = { id: 'c3', name: 'Результат команды', max: 10, desc: 'Насколько команда достигла целей проекта, поставленных на сезон.' };
     const C4 = { id: 'c4', name: 'Соблюдение сроков', max: 5, desc: 'Насколько вовремя команда под руководством наставника проходит контрольные точки.' };
-    const all = this.MENTORS.flatMap(m => m.teams);
-    const without = ex => all.filter(t => !ex.includes(t));
+    const roster = (ex = []) => MENTORS.map(m => ({ id: m.id, name: m.name, teams: m.teams.filter(t => !ex.includes(t)) }));
+    const tf = r => r.flatMap(m => m.teams);
     const fill = (teams, crits, seed) => {
       const sc = {};
       teams.forEach((t, ti) => crits.forEach((c, ci) => {
@@ -290,8 +478,8 @@ class Component extends DCLogic {
       }));
       return sc;
     };
-    const t1 = without(['Пульс кампуса', 'Бриз', 'Маяк']);
-    const t2 = without(['Пульс кампуса', 'Бриз']);
+    const r1 = roster(['Пульс кампуса', 'Бриз', 'Маяк']);
+    const r2 = roster(['Пульс кампуса', 'Бриз']);
     const s3scores = {
       'КодМастер|c1': 4, 'КодМастер|c2': 5, 'КодМастер|c3': 8, 'КодМастер|c4': 4,
       'Север|c1': 3, 'Север|c2': 4, 'Север|c3': 7, 'Север|c4': 5,
@@ -301,17 +489,40 @@ class Component extends DCLogic {
     };
     return {
       seasons: [
-        { id: 's1', num: 1, name: 'Осень 2025', period: 'сен – дек 2025', status: 'closed', criteria: [C1, C2], teams: t1, scores: fill(t1, [C1, C2], 1), draft: [] },
-        { id: 's2', num: 2, name: 'Весна 2026', period: 'фев – июн 2026', status: 'closed', criteria: [C1, C2, C3], teams: t2, scores: fill(t2, [C1, C2, C3], 2), draft: [] },
-        { id: 's3', num: 3, name: 'Осень 2026', period: 'сен – дек 2026', status: 'active', criteria: [C1, C2, C3, C4], teams: all, scores: s3scores, draft: [] },
-        { id: 's4', num: 4, name: 'Весна 2027', period: 'фев – июн 2027', status: 'draft', criteria: [], teams: all.slice(), scores: {}, draft: [] },
+        { id: 's1', name: 'Осень 2025', period: 'сен – дек 2025', status: 'closed', criteria: [C1, C2], roster: r1, scores: fill(tf(r1), [C1, C2], 1), comments: {}, draft: [] },
+        { id: 's2', name: 'Весна 2026', period: 'фев – июн 2026', status: 'closed', criteria: [C1, C2, C3], roster: r2, scores: fill(tf(r2), [C1, C2, C3], 2), comments: {}, draft: [] },
+        { id: 's3', name: 'Осень 2026', period: 'сен – дек 2026', status: 'active', criteria: [C1, C2, C3, C4], roster: roster(), scores: s3scores, comments: { 'Север': 'Две встречи перенесли из-за сессии.' }, draft: [] },
+        { id: 's4', name: 'Весна 2027', period: 'фев – июн 2027', status: 'draft', criteria: [], roster: roster(), scores: {}, comments: {}, draft: [] },
       ],
       selId: 's3',
       drafts: {}, invalid: {}, cellSave: {},
       saveInd: 'idle', savedAt: null,
-      tip: null, modal: null, copyOpen: false,
+      tip: null, modal: null, copyOpen: false, menuOpen: false, rosterOpen: false,
       draftSavedAt: null, attempted: false, critTouched: false,
+      q: '', sort: 'order', teamInputs: {}, rosterErr: {}, newMentor: '',
     };
+  }
+
+  loadInitial() {
+    const base = this.buildInitial();
+    try {
+      const d = JSON.parse(localStorage.getItem(this.STORE) || 'null');
+      if (d && Array.isArray(d.seasons) && d.seasons.length) {
+        const seasons = d.seasons.map(s => ({ criteria: [], roster: [], scores: {}, comments: {}, draft: [], period: '', ...s }));
+        const selId = d.selId === 'all' || seasons.some(s => s.id === d.selId) ? d.selId : seasons[0].id;
+        return { ...base, seasons, selId };
+      }
+    } catch (e) {}
+    return base;
+  }
+  flush() {
+    try { localStorage.setItem(this.STORE, JSON.stringify({ seasons: this.state.seasons, selId: this.state.selId })); } catch (e) {}
+  }
+  componentDidUpdate(pp, ps) {
+    if (ps.seasons !== this.state.seasons || ps.selId !== this.state.selId) {
+      clearTimeout(this.saveT);
+      this.saveT = setTimeout(() => this.flush(), 300);
+    }
   }
 
   // временная формула, ждём решения заказчика
@@ -319,6 +530,33 @@ class Component extends DCLogic {
   mentorRating(completeRowPercents) {
     if (!completeRowPercents.length) return null;
     return completeRowPercents.reduce((a, b) => a + b, 0) / completeRowPercents.length;
+  }
+  rowPct(s, team) {
+    const crits = s.criteria;
+    if (!crits.length) return null;
+    const maxSum = crits.reduce((a, c) => a + c.max, 0);
+    let sum = 0;
+    for (const c of crits) { const v = s.scores[team + '|' + c.id]; if (v == null) return null; sum += v; }
+    return sum / maxSum * 100;
+  }
+  mentorSeasonRating(s, m) {
+    const p = m.teams.map(t => this.rowPct(s, t)).filter(x => x != null);
+    return { r: this.mentorRating(p), n: p.length };
+  }
+  // Сводный рейтинг = среднее рейтингов наставника по сезонам, где рейтинг не пустой.
+  summary() {
+    const ss = this.state.seasons.filter(x => x.status !== 'draft');
+    const names = [];
+    ss.forEach(x => x.roster.forEach(m => { if (m.teams.length && !names.includes(m.name)) names.push(m.name); }));
+    const rows = names.map(name => {
+      const vals = ss.map(x => { const m = x.roster.find(y => y.name === name && y.teams.length); return m ? this.mentorSeasonRating(x, m).r : undefined; });
+      const got = vals.filter(x => x != null);
+      return { name, vals, overall: got.length ? got.reduce((a, b) => a + b, 0) / got.length : null, n: got.length };
+    });
+    rows.sort((a, b) => (b.overall ?? -1) - (a.overall ?? -1));
+    let rank = 0;
+    rows.forEach(r => { r.rank = r.overall == null ? null : ++rank; });
+    return { seasons: ss, rows };
   }
 
   plural(n, one, few, many) {
@@ -329,17 +567,29 @@ class Component extends DCLogic {
   }
   ofGen(n, one, many) { return (n % 10 === 1 && n % 100 !== 11) ? one : many; }
   now() { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
-  cur() { return this.state.seasons.find(s => s.id === this.state.selId); }
+  cur() { return this.state.seasons.find(s => s.id === this.state.selId) || null; }
+  teamsOf(s) { return s.roster.flatMap(m => m.teams); }
   updateSeason(id, fn) { this.setState(st => ({ seasons: st.seasons.map(s => s.id === id ? fn(s) : s) })); }
+  setModal(patch) { this.setState(st => st.modal ? { modal: { ...st.modal, ...patch } } : null); }
 
   componentDidMount() {
-    this.onKey = e => { if (e.key === 'Escape') this.setState({ modal: null, copyOpen: false }); };
+    this.onKey = e => {
+      if (e.key !== 'Escape') return;
+      if (this.state.modal) this.setState({ modal: null });
+      else this.setState({ copyOpen: false, menuOpen: false, rosterOpen: false });
+    };
+    this.onUnload = () => this.flush();
     window.addEventListener('keydown', this.onKey);
+    window.addEventListener('beforeunload', this.onUnload);
   }
-  componentWillUnmount() { window.removeEventListener('keydown', this.onKey); }
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.onKey);
+    window.removeEventListener('beforeunload', this.onUnload);
+    this.flush();
+  }
 
   selectSeason(id) {
-    this.setState({ selId: id, tip: null, copyOpen: false, attempted: false, critTouched: false, draftSavedAt: null, modal: null });
+    this.setState({ selId: id, tip: null, copyOpen: false, menuOpen: false, rosterOpen: false, attempted: false, critTouched: false, draftSavedAt: null, modal: null, rosterErr: {}, teamInputs: {} });
   }
 
   getRef(id) {
@@ -426,10 +676,144 @@ class Component extends DCLogic {
     else this.applyCopy(fromId);
   }
   tryStart() {
-    const d = this.cur().draft;
+    const s = this.cur(), d = s.draft;
     this.setState({ attempted: true });
-    if (d.length && d.every(c => { const e = this.critErrors(c); return !e.name && !e.max; })) this.setState({ modal: { type: 'start' } });
+    if (this.teamsOf(s).length && d.length && d.every(c => { const e = this.critErrors(c); return !e.name && !e.max; })) this.setState({ modal: { type: 'start' } });
   }
+
+  openCreate() {
+    const last = this.state.seasons[this.state.seasons.length - 1];
+    const mt = last && /^(Весна|Осень)\s+(\d{4})$/.exec(last.name);
+    let name = '', period = '';
+    if (mt) {
+      const y = +mt[2];
+      if (mt[1] === 'Весна') { name = `Осень ${y}`; period = `сен – дек ${y}`; }
+      else { name = `Весна ${y + 1}`; period = `фев – июн ${y + 1}`; }
+    }
+    this.createFocused = false;
+    this.setState({ copyOpen: false, menuOpen: false, modal: { type: 'create', mode: 'new', name, period, err: '' } });
+  }
+  openRename() {
+    const s = this.cur();
+    this.createFocused = false;
+    this.setState({ menuOpen: false, modal: { type: 'create', mode: 'rename', id: s.id, name: s.name, period: s.period || '', err: '' } });
+  }
+  createSeason() {
+    const st = this.state, m = st.modal;
+    const name = m.name.trim();
+    let err = '';
+    if (!name) err = 'Укажите название';
+    else if (st.seasons.some(s => s.id !== m.id && s.name.toLowerCase() === name.toLowerCase())) err = 'Сезон с таким названием уже есть';
+    if (err) { this.setModal({ err }); return; }
+    if (m.mode === 'rename') {
+      this.updateSeason(m.id, s => ({ ...s, name, period: m.period.trim() }));
+      this.setState({ modal: null });
+      return;
+    }
+    const id = 's' + Date.now().toString(36);
+    const last = st.seasons[st.seasons.length - 1];
+    const roster = last ? last.roster.map(x => ({ ...x, teams: x.teams.slice() })) : [];
+    this.setState(p => ({ seasons: [...p.seasons, { id, name, period: m.period.trim(), status: 'draft', criteria: [], roster, scores: {}, comments: {}, draft: [] }] }));
+    this.selectSeason(id);
+    setTimeout(() => { if (this.tabsEl) this.tabsEl.scrollLeft = this.tabsEl.scrollWidth; }, 0);
+  }
+
+  updRoster(fn) { this.updateSeason(this.state.selId, s => ({ ...s, roster: fn(s.roster) })); }
+  setRosterErr(k, msg) { this.setState(p => ({ rosterErr: { ...p.rosterErr, [k]: msg } })); }
+  addMentor() {
+    const s = this.cur();
+    const name = this.state.newMentor.trim();
+    if (!name) return this.setRosterErr('__new', 'Укажите ФИО наставника');
+    if (s.roster.some(m => m.name.toLowerCase() === name.toLowerCase())) return this.setRosterErr('__new', 'Такой наставник уже есть');
+    this.uid++;
+    const id = 'm' + Date.now().toString(36) + this.uid;
+    this.updRoster(r => [...r, { id, name, teams: [] }]);
+    this.setState(p => ({ newMentor: '', rosterErr: { ...p.rosterErr, __new: '' } }));
+  }
+  removeMentor(id) { this.updRoster(r => r.filter(m => m.id !== id || m.teams.length)); }
+  addTeam(mid) {
+    const s = this.cur();
+    const name = (this.state.teamInputs[mid] || '').trim();
+    if (!name) return this.setRosterErr(mid, 'Укажите название команды');
+    if (name.includes('|')) return this.setRosterErr(mid, 'Символ «|» в названии недопустим');
+    if (this.teamsOf(s).some(t => t.toLowerCase() === name.toLowerCase())) return this.setRosterErr(mid, 'Команда с таким названием уже есть в сезоне');
+    this.updRoster(r => r.map(m => m.id === mid ? { ...m, teams: [...m.teams, name] } : m));
+    this.setState(p => ({ teamInputs: { ...p.teamInputs, [mid]: '' }, rosterErr: { ...p.rosterErr, [mid]: '' } }));
+  }
+  moveTeam(team, toMid) {
+    this.updRoster(r => r.map(m => {
+      const rest = m.teams.filter(t => t !== team);
+      return { ...m, teams: m.id === toMid ? [...rest, team] : rest };
+    }));
+  }
+  removeTeam(team) {
+    const s = this.cur();
+    const has = Object.keys(s.scores).some(k => k.startsWith(team + '|')) || !!s.comments[team];
+    if (has) this.setState({ modal: { type: 'removeTeam', team } });
+    else this.doRemoveTeam(team);
+  }
+  doRemoveTeam(team) {
+    this.updateSeason(this.state.selId, s => {
+      const scores = {};
+      Object.keys(s.scores).forEach(k => { if (!k.startsWith(team + '|')) scores[k] = s.scores[k]; });
+      const comments = { ...s.comments };
+      delete comments[team];
+      return { ...s, roster: s.roster.map(m => ({ ...m, teams: m.teams.filter(t => t !== team) })), scores, comments };
+    });
+  }
+
+  openComment(team) {
+    const s = this.cur();
+    this.commentFocused = false;
+    this.setState({ modal: { type: 'comment', team, text: s.comments[team] || '', readonly: s.status !== 'active' } });
+  }
+  saveComment() {
+    const m = this.state.modal;
+    const text = m.text.trim();
+    this.updateSeason(this.state.selId, s => {
+      const c = { ...s.comments };
+      if (text) c[m.team] = text; else delete c[m.team];
+      return { ...s, comments: c };
+    });
+    this.setState({ modal: null, savedAt: this.now(), saveInd: this.pending > 0 ? 'saving' : 'done' });
+  }
+
+  csvCell(v) {
+    const s = v == null ? '' : String(v);
+    return /[";\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  }
+  download(name, rows) {
+    const text = '\ufeff' + rows.map(r => r.map(x => this.csvCell(x)).join(';')).join('\r\n');
+    const url = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+    const a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  exportCsv() {
+    const s = this.cur();
+    const pct = x => x == null ? '' : Math.round(x) + '%';
+    if (!s) {
+      const sum = this.summary();
+      const rows = [['Место', 'Наставник', ...sum.seasons.map(x => x.name), 'Итог', 'Сезонов в итоге']];
+      sum.rows.forEach(r => rows.push([r.rank ?? '', r.name, ...r.vals.map(x => x === undefined ? 'не участвовал' : pct(x)), pct(r.overall), r.n]));
+      this.download('Оценка наставников — сводный рейтинг.csv', rows);
+      return;
+    }
+    const crits = s.criteria;
+    const rows = [['Наставник', 'Команда', ...crits.map(c => `${c.name} (макс ${c.max})`), 'Сумма', 'Процент', 'Рейтинг наставника', 'Комментарий']];
+    s.roster.forEach(m => {
+      if (!m.teams.length) return;
+      const r = this.mentorSeasonRating(s, m).r;
+      m.teams.forEach(t => {
+        const vals = crits.map(c => s.scores[t + '|' + c.id]);
+        const p = this.rowPct(s, t);
+        rows.push([m.name, t, ...vals.map(x => x == null ? '' : x), p == null ? '' : vals.reduce((a, b) => a + b, 0), pct(p), pct(r), s.comments[t] || '']);
+      });
+    });
+    this.download(`Оценка наставников — ${s.name}.csv`, rows);
+  }
+
   confirmModal() {
     const m = this.state.modal; const sid = this.state.selId;
     if (!m) return;
@@ -439,7 +823,7 @@ class Component extends DCLogic {
         const drafts = {}, invalid = {};
         Object.keys(st.drafts).forEach(k => { if (!k.startsWith(sid + '|')) drafts[k] = st.drafts[k]; });
         Object.keys(st.invalid).forEach(k => { if (!k.startsWith(sid + '|')) invalid[k] = st.invalid[k]; });
-        return { modal: null, tip: null, drafts, invalid };
+        return { modal: null, tip: null, drafts, invalid, rosterOpen: false };
       });
     } else if (m.type === 'start') {
       this.updateSeason(sid, s => ({ ...s, status: 'active', scores: {}, criteria: s.draft.map(c => ({ id: c.id, name: c.name.trim(), desc: c.desc.trim(), max: parseInt(c.max, 10) })) }));
@@ -447,31 +831,69 @@ class Component extends DCLogic {
     } else if (m.type === 'replace') {
       this.applyCopy(m.from);
       this.setState({ modal: null });
+    } else if (m.type === 'deleteSeason') {
+      const all = this.state.seasons;
+      const idx = all.findIndex(x => x.id === sid);
+      const rest = all.filter(x => x.id !== sid);
+      const next = rest[Math.min(idx, rest.length) - 1] || rest[0];
+      this.setState({ seasons: rest });
+      this.selectSeason(next ? next.id : 'all');
+    } else if (m.type === 'removeTeam') {
+      this.doRemoveTeam(m.team);
+      this.setState({ modal: null });
     }
   }
 
   renderVals() {
     const st = this.state;
     const s = this.cur();
-    const isDraft = s.status === 'draft', isActive = s.status === 'active', isClosed = s.status === 'closed';
+    const isAll = !s;
+    const status = s ? s.status : '';
+    const isDraft = status === 'draft', isActive = status === 'active', isClosed = status === 'closed';
+    const q = st.q.trim().toLowerCase();
+    const P = (n, a, b, c) => `${n} ${this.plural(n, a, b, c)}`;
     const statusLabel = x => x.status === 'draft' ? 'Критерии: черновик' : x.status === 'active' ? 'Оценка идёт' : 'Закрыт';
     const v = {
-      seasonLabel: `${s.name} · ${s.period}`,
+      seasonLabel: isAll ? 'Все сезоны · сводный рейтинг' : (s.period ? `${s.name} · ${s.period}` : s.name),
       sectionMinH: isDraft ? 'auto' : '0px',
-      isDraft, isActive, isClosed, isTable: !isDraft,
+      isDraft, isActive, isClosed, isAll,
+      isTable: !isDraft, isSeasonTable: isActive || isClosed,
       chipDraft: isDraft, chipActive: isActive, chipClosed: isClosed,
-      critHeads: [], mentors: [], draftRows: [], copySources: [],
+      critHeads: [], mentors: [], draftRows: [], copySources: [], sumHeads: [], sumRows: [], rosterMentors: [],
+      showRosterBtn: isDraft || isActive,
+      showSeasonMenu: !isAll, seasonMenuOpen: st.menuOpen, canDeleteSeason: isDraft,
+      toggleSeasonMenu: () => this.setState(p => ({ menuOpen: !p.menuOpen, copyOpen: false })),
+      closeSeasonMenu: () => this.setState({ menuOpen: false }),
+      onRename: () => this.openRename(),
+      onDeleteSeason: () => this.setState({ menuOpen: false, modal: { type: 'deleteSeason' } }),
+      openRoster: () => this.setState({ rosterOpen: true, copyOpen: false, menuOpen: false }),
+      closeRoster: () => this.setState({ rosterOpen: false, rosterErr: {} }),
+      q: st.q, hasQuery: !!q,
+      onSearch: e => this.setState({ q: e.target.value }),
+      clearSearch: () => this.setState({ q: '' }),
+      showSort: !isAll,
+      onSortOrder: () => this.setState({ sort: 'order' }),
+      onSortRating: () => this.setState({ sort: 'rating' }),
+      onExport: () => this.exportCsv(),
       openFinish: () => this.setState({ modal: { type: 'finish' } }),
+      openCreate: () => this.openCreate(),
       stop: e => e.stopPropagation(),
       onModalCancel: () => this.setState({ modal: null }),
       onModalConfirm: () => this.confirmModal(),
     };
+    const segBtn = on => ({ pressed: on, bg: on ? '#ffffff' : 'transparent', color: on ? '#181c1e' : '#5b6468', shadow: on ? '0 1px 2px rgba(24,28,30,0.14)' : 'none' });
+    v.sortA = segBtn(st.sort !== 'rating');
+    v.sortB = segBtn(st.sort === 'rating');
 
-    v.seasonCells = st.seasons.map(x => {
+    v.allTab = {
+      selected: isAll, bg: isAll ? '#00ab4f' : '#ffffff', border: isAll ? '#00ab4f' : '#dde3e7', color: isAll ? '#ffffff' : '#181c1e',
+      onClick: () => this.selectSeason('all'),
+    };
+    v.seasonCells = st.seasons.map((x, i) => {
       const sel = x.id === st.selId;
       const dot = x.status === 'active' ? (sel ? '#ffffff' : '#00ab4f') : x.status === 'draft' ? '#5d3fe0' : '#9aa4a9';
       return {
-        num: String(x.num), name: x.name, selected: sel, statusLabel: statusLabel(x),
+        num: String(i + 1), name: x.name, selected: sel, statusLabel: statusLabel(x),
         bg: sel ? '#00ab4f' : '#ffffff', border: sel ? '#00ab4f' : '#dde3e7', color: sel ? '#ffffff' : '#181c1e',
         dot, dotRing: sel && x.status !== 'active' ? '0 0 0 2px #ffffff' : 'none',
         onClick: () => this.selectSeason(x.id),
@@ -479,7 +901,8 @@ class Component extends DCLogic {
     });
 
     let filled = 0, total = 0;
-    if (!isDraft) {
+    v.noResults = false;
+    if (v.isSeasonTable) {
       const crits = s.criteria;
       const maxSum = crits.reduce((a, c) => a + c.max, 0);
       v.innerCols = `170px repeat(${crits.length}, minmax(112px, 1fr)) 210px`;
@@ -490,19 +913,21 @@ class Component extends DCLogic {
         onEnter: () => this.setState({ tip: c.id }),
         onLeave: () => this.setState(p => p.tip === c.id ? { tip: null } : null),
       }));
+      this.teamsOf(s).forEach(t => crits.forEach(c => { total++; if (s.scores[t + '|' + c.id] != null) filled++; }));
+      let groups = s.roster.filter(m => m.teams.length).map(m => {
+        const match = !q || m.name.toLowerCase().includes(q);
+        return { m, shown: match ? m.teams : m.teams.filter(t => t.toLowerCase().includes(q)), rt: this.mentorSeasonRating(s, m) };
+      }).filter(g => g.shown.length);
+      if (st.sort === 'rating') groups = groups.slice().sort((a, b) => (b.rt.r ?? -1) - (a.rt.r ?? -1));
       let ri = 0;
-      v.mentors = this.MENTORS.map(m => {
-        const teams = m.teams.filter(t => s.teams.includes(t));
-        if (!teams.length) return null;
-        const pcts = [];
-        const rows = teams.map(team => {
+      v.mentors = groups.map(({ m, shown, rt }) => {
+        const rows = shown.map(team => {
           const rowI = ri++;
           let sum = 0, cnt = 0;
           const cells = crits.map((c, ci) => {
             const sk = team + '|' + c.id, k = s.id + '|' + sk;
             const val = s.scores[sk];
-            total++;
-            if (val != null) { filled++; cnt++; sum += val; }
+            if (val != null) { cnt++; sum += val; }
             const invalid = isActive && !!st.invalid[k];
             const failed = st.cellSave[k] === 'error';
             const draft = st.drafts[k];
@@ -525,26 +950,63 @@ class Component extends DCLogic {
           });
           const complete = crits.length > 0 && cnt === crits.length;
           const pct = complete ? sum / maxSum * 100 : null;
-          if (complete) pcts.push(pct);
-          return { team, cells, complete, incomplete: !complete, totalText: complete ? `${sum} / ${maxSum} · ${Math.round(pct)}%` : '' };
+          const comment = s.comments[team] || '';
+          return {
+            team, cells, complete, incomplete: !complete,
+            totalText: complete ? `${sum} / ${maxSum} · ${Math.round(pct)}%` : '',
+            showCommentBtn: isActive || !!comment,
+            commentColor: comment ? '#5d3fe0' : '#9aa4a9',
+            commentFill: comment ? "'FILL' 1" : "'FILL' 0",
+            commentLabel: comment ? `Комментарий: ${team}` : `Добавить комментарий: ${team}`,
+            commentTitle: comment || 'Добавить комментарий',
+            onComment: () => this.openComment(team),
+          };
         });
-        const r = this.mentorRating(pcts);
+        const n = m.teams.length;
         return {
           name: m.name, rows,
-          ratingText: r == null ? '—' : Math.round(r) + '%',
-          ratingColor: r == null ? '#9aa4a9' : '#5d3fe0',
-          ratingSub: `по ${pcts.length} из ${teams.length} ${this.ofGen(teams.length, 'команды', 'команд')}`,
+          ratingText: rt.r == null ? '—' : Math.round(rt.r) + '%',
+          ratingColor: rt.r == null ? '#9aa4a9' : '#5d3fe0',
+          ratingSub: `по ${rt.n} из ${n} ${this.ofGen(n, 'команды', 'команд')}`,
         };
-      }).filter(Boolean);
+      });
+      v.noResults = !!q && !groups.length;
     }
+    v.showSeasonGrid = v.isSeasonTable && !v.noResults;
+
+    v.showSumGrid = false; v.sumEmpty = false;
+    if (isAll) {
+      const sum = this.summary();
+      const rows = sum.rows.filter(r => !q || r.name.toLowerCase().includes(q));
+      const n = sum.seasons.length;
+      v.sumCols = `56px minmax(180px, 1.4fr) repeat(${n}, minmax(110px, 1fr)) 170px`;
+      v.sumMinWidth = 56 + 180 + n * 110 + 170;
+      v.sumHeads = sum.seasons.map(x => ({ name: x.name, sub: x.status === 'active' ? 'оценка идёт' : (x.period || 'закрыт') }));
+      v.sumRows = rows.map(r => ({
+        rank: r.rank == null ? '—' : String(r.rank), name: r.name,
+        cells: r.vals.map(x => ({ text: x === undefined ? '' : x == null ? '—' : Math.round(x) + '%', color: x == null ? '#9aa4a9' : '#181c1e' })),
+        overallText: r.overall == null ? '—' : Math.round(r.overall) + '%',
+        overallColor: r.overall == null ? '#9aa4a9' : '#5d3fe0',
+        overallSub: r.n ? `за ${P(r.n, 'сезон', 'сезона', 'сезонов')}` : 'нет оценок',
+      }));
+      v.sumEmpty = !n;
+      v.noResults = !!q && n > 0 && !rows.length;
+      v.showSumGrid = n > 0 && !v.noResults;
+    }
+    v.noResultsText = `По запросу «${st.q.trim()}» нет наставников и команд`;
+
     v.filledText = `Заполнено ${filled} из ${total} ${this.ofGen(total, 'ячейки', 'ячеек')}`;
     v.progressPct = total ? Math.round(filled / total * 1000) / 10 : 0;
-    const errCount = Object.keys(st.cellSave).filter(k => k.startsWith(s.id + '|') && st.cellSave[k] === 'error').length;
+    const errCount = s ? Object.keys(st.cellSave).filter(k => k.startsWith(s.id + '|') && st.cellSave[k] === 'error').length : 0;
     v.indSaving = st.saveInd === 'saving';
     v.indError = !v.indSaving && errCount > 0;
     v.indSaved = !v.indSaving && !errCount && !!st.savedAt;
     v.errText = `Не сохранено: ${errCount} ${this.plural(errCount, 'ячейка', 'ячейки', 'ячеек')}`;
     v.savedText = `Сохранено, ${st.savedAt}`;
+
+    const tc = s ? this.teamsOf(s).length : 0;
+    const mc = s ? s.roster.filter(m => m.teams.length).length : 0;
+    v.rosterLine = `${P(mc, 'наставник', 'наставника', 'наставников')}, ${P(tc, 'команда', 'команды', 'команд')}`;
 
     let valid = 0, maxTotal = 0;
     if (isDraft) {
@@ -571,40 +1033,109 @@ class Component extends DCLogic {
         };
       });
       v.copySources = st.seasons.filter(x => x.status !== 'draft' && x.criteria.length).map(x => ({
-        name: x.name, sub: `${x.criteria.length} ${this.plural(x.criteria.length, 'критерий', 'критерия', 'критериев')}`,
+        name: x.name, sub: P(x.criteria.length, 'критерий', 'критерия', 'критериев'),
         onPick: () => this.pickCopy(x.id),
       }));
       v.showMinErr = d.length === 0 && (st.attempted || st.critTouched);
     }
     v.critCountText = `Критериев: ${isDraft ? s.draft.length : 0}`;
     v.maxSumText = `Максимум за команду: ${maxTotal} ${this.plural(maxTotal, 'балл', 'балла', 'баллов')}`;
-    v.canStart = valid > 0;
+    v.canStart = valid > 0 && tc > 0;
     v.cannotStart = !v.canStart;
+    v.startHint = tc === 0 ? 'Добавьте в состав хотя бы одну команду' : 'Добавьте хотя бы один заполненный критерий';
     v.copyOpen = st.copyOpen;
-    v.toggleCopy = () => this.setState(p => ({ copyOpen: !p.copyOpen }));
+    v.toggleCopy = () => this.setState(p => ({ copyOpen: !p.copyOpen, menuOpen: false }));
     v.closeCopy = () => this.setState({ copyOpen: false });
     v.saveDraft = () => this.setState({ draftSavedAt: this.now() });
     v.draftSaved = !!st.draftSavedAt;
     v.addCrit = () => this.updDraft(d => [...d, this.newCrit()]);
     v.tryStart = () => this.tryStart();
 
+    v.rosterOpen = st.rosterOpen && (isDraft || isActive);
+    v.rosterTitle = s ? `Состав · ${s.name}` : '';
+    v.rosterSummary = s ? `${P(s.roster.length, 'наставник', 'наставника', 'наставников')}, ${P(tc, 'команда', 'команды', 'команд')}` : '';
+    if (v.rosterOpen) {
+      const opts = s.roster.map(m => ({ id: m.id, name: m.name }));
+      v.rosterMentors = s.roster.map(m => {
+        const err = st.rosterErr[m.id] || '';
+        return {
+          name: m.name, countText: P(m.teams.length, 'команда', 'команды', 'команд'),
+          canDelete: !m.teams.length,
+          onDelete: () => this.removeMentor(m.id),
+          teams: m.teams.map(t => ({
+            name: t, mentorId: m.id, options: opts,
+            moveLabel: `Наставник команды ${t}`, removeLabel: `Убрать команду ${t}`,
+            onMove: e => this.moveTeam(t, e.target.value),
+            onRemove: () => this.removeTeam(t),
+          })),
+          input: st.teamInputs[m.id] || '',
+          onInput: e => { const val = e.target.value; this.setState(p => ({ teamInputs: { ...p.teamInputs, [m.id]: val }, rosterErr: { ...p.rosterErr, [m.id]: '' } })); },
+          onKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.addTeam(m.id); } },
+          onAdd: () => this.addTeam(m.id),
+          err, hasErr: !!err, inputBorder: err ? '#d93025' : '#cfd8dc',
+        };
+      });
+    }
+    v.newMentor = st.newMentor;
+    v.onNewMentor = e => { const val = e.target.value; this.setState(p => ({ newMentor: val, rosterErr: { ...p.rosterErr, __new: '' } })); };
+    v.onNewMentorKey = e => { if (e.key === 'Enter') { e.preventDefault(); this.addMentor(); } };
+    v.onAddMentor = () => this.addMentor();
+    v.newMentorErr = st.rosterErr.__new || '';
+    v.hasNewMentorErr = !!v.newMentorErr;
+    v.newMentorBorder = v.hasNewMentorErr ? '#d93025' : '#cfd8dc';
+
     const m = st.modal;
-    v.modalOpen = !!m;
+    const mt = m ? m.type : '';
+    const isCreate = mt === 'create', isComment = mt === 'comment';
+    v.modalOpen = !!m && !isCreate && !isComment;
+    v.createOpen = isCreate;
+    v.createIsNew = isCreate && m.mode !== 'rename';
+    v.createTitle = v.createIsNew ? 'Новый сезон' : 'Переименовать сезон';
+    v.createBtn = v.createIsNew ? 'Создать' : 'Сохранить';
+    v.createName = isCreate ? m.name : '';
+    v.createPeriod = isCreate ? m.period : '';
+    v.createErr = isCreate ? m.err : '';
+    v.hasCreateErr = isCreate && !!m.err;
+    v.createBorder = v.hasCreateErr ? '#d93025' : '#cfd8dc';
+    v.onCreateName = e => this.setModal({ name: e.target.value, err: '' });
+    v.onCreatePeriod = e => this.setModal({ period: e.target.value });
+    v.onCreateKey = e => { if (e.key === 'Enter') { e.preventDefault(); this.createSeason(); } };
+    v.onCreateSubmit = () => this.createSeason();
+    if (!this.createNameRef) this.createNameRef = el => { if (el && !this.createFocused) { this.createFocused = true; el.focus(); el.select(); } };
+    if (!this.commentRef) this.commentRef = el => { if (el && !this.commentFocused) { this.commentFocused = true; el.focus(); } };
+    if (!this.tabsRef) this.tabsRef = el => { this.tabsEl = el; };
+    v.createNameRef = this.createNameRef;
+    v.commentRef = this.commentRef;
+    v.tabsRef = this.tabsRef;
+
+    v.commentOpen = isComment;
+    v.commentTitle = isComment ? `Комментарий · ${m.team}` : '';
+    v.commentText = isComment ? m.text : '';
+    v.commentEditable = isComment && !m.readonly;
+    v.commentReadonly = isComment && !!m.readonly;
+    v.commentCancel = isComment && m.readonly ? 'Закрыть' : 'Отмена';
+    v.onCommentText = e => this.setModal({ text: e.target.value });
+    v.onCommentSave = () => this.saveComment();
+
     v.modalText = ''; v.modalConfirm = '';
-    if (m && m.type === 'finish') {
+    if (mt === 'finish') {
       const empty = total - filled;
       v.modalText = empty > 0
         ? `Не заполнено ${empty} ${this.plural(empty, 'ячейка', 'ячейки', 'ячеек')} из ${total}. Строки с пустыми ячейками не попадут в рейтинг наставника. Завершить сезон?`
         : `Все ${total} ${this.plural(total, 'ячейка', 'ячейки', 'ячеек')} заполнены. Завершить сезон?`;
       v.modalConfirm = 'Завершить';
-    } else if (m && m.type === 'start') {
-      const rows = s.teams.length;
-      const mc = this.MENTORS.filter(x => x.teams.some(t => s.teams.includes(t))).length;
-      v.modalText = `Критерии нельзя будет изменить. Будет создано ${rows} ${this.plural(rows, 'строка', 'строки', 'строк')}: ${mc} ${this.plural(mc, 'наставник', 'наставника', 'наставников')}, ${rows} ${this.plural(rows, 'команда', 'команды', 'команд')}.`;
+    } else if (mt === 'start') {
+      v.modalText = `Критерии нельзя будет изменить. Будет создано ${P(tc, 'строка', 'строки', 'строк')}: ${P(mc, 'наставник', 'наставника', 'наставников')}, ${P(tc, 'команда', 'команды', 'команд')}.`;
       v.modalConfirm = 'Начать';
-    } else if (m && m.type === 'replace') {
+    } else if (mt === 'replace') {
       v.modalText = 'Заменить текущие критерии?';
       v.modalConfirm = 'Заменить';
+    } else if (mt === 'deleteSeason') {
+      v.modalText = `Удалить сезон «${s ? s.name : ''}»? Его критерии и состав будут удалены.`;
+      v.modalConfirm = 'Удалить';
+    } else if (mt === 'removeTeam') {
+      v.modalText = `Убрать команду «${m.team}» из сезона? Её оценки и комментарий будут удалены.`;
+      v.modalConfirm = 'Убрать';
     }
     return v;
   }
