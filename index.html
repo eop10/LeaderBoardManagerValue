@@ -1685,6 +1685,11 @@
      Ввод в черновике
      ========================================================= */
   function onDraftInput(target, season) {
+    // Редактируемые поля черновика помечены data-field. Остальные элементы
+    // внутри строк (например, селект переноса команды) шлют input со своим
+    // value — без этой проверки id наставника попадал в название команды.
+    if (!target.getAttribute || !target.getAttribute('data-field')) return;
+
     var critRow = target.closest('.crit-row');
     if (critRow) {
       var cid = critRow.getAttribute('data-cid');
