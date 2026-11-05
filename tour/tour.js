@@ -24,7 +24,8 @@
   function tab(name) { return $$('[role=tab]').filter(function (b) { return b.textContent.trim().indexOf(name) === 0; })[0]; }
   async function openTab(name) {
     var t = tab(name); if (!t) return;
-    if (t.getAttribute('aria-selected') !== 'true') t.click();
+    if (t.getAttribute('aria-selected') === 'true') return;
+    t.click();
     await waitFor(function () { var x = tab(name); return x && x.getAttribute('aria-selected') === 'true'; });
     await sleep(120);
   }
@@ -266,19 +267,32 @@
       '<div class="lb-pop-body" tabindex="0"></div>' +
       '<div class="lb-pop-footer"><span class="lb-pop-progress"></span><span class="lb-pop-btns">' +
       '<button type="button" class="lb-pop-prev">Назад</button><button type="button" class="lb-pop-next">Далее</button></span></div>';
-    document.body.appendChild(ov); document.body.appendChild(pop);
-    return { ov: ov, pop: pop, hole: ov.querySelector('.lb-hole'), arrow: pop.querySelector('.lb-arrow'),
+    pop.classList.add('lb-pop-init'); /* первое появление без перелёта */
+    /* Невидимая копия подсказки: в ней меряем высоту текста, не трогая видимую (иначе она дёргалась бы). */
+    var ghost = pop.cloneNode(true);
+    ghost.className = 'lb-pop lb-ghost'; ghost.removeAttribute('role'); ghost.removeAttribute('aria-modal'); ghost.removeAttribute('aria-labelledby');
+    ghost.removeAttribute('data-ready'); ghost.setAttribute('aria-hidden', 'true'); ghost.setAttribute('inert', '');
+    Array.prototype.forEach.call(ghost.querySelectorAll('[id]'), function (n) { n.removeAttribute('id'); });
+    document.body.appendChild(ov); document.body.appendChild(pop); document.body.appendChild(ghost);
+    return { ov: ov, pop: pop, ghost: ghost, hole: ov.querySelector('.lb-hole'), arrow: pop.querySelector('.lb-arrow'),
       title: pop.querySelector('.lb-pop-title'), body: pop.querySelector('.lb-pop-body'), progress: pop.querySelector('.lb-pop-progress'),
       prev: pop.querySelector('.lb-pop-prev'), next: pop.querySelector('.lb-pop-next'), close: pop.querySelector('.lb-pop-close') };
   }
+  function fillNodes(root, i) {
+    var s = STEPS[i], q = function (c) { return root.querySelector(c); };
+    q('.lb-pop-title').innerHTML = ic(s.icon) + '<span>' + s.title + '</span>';
+    q('.lb-pop-body').innerHTML = s.text + (s.note ? '<span class="lb-note">' + s.note + '</span>' : '');
+    q('.lb-pop-body').scrollTop = 0;
+    q('.lb-pop-progress').textContent = (i + 1) + ' из ' + STEPS.length;
+    q('.lb-pop-prev').style.display = i === 0 ? 'none' : '';
+    q('.lb-pop-next').textContent = i === STEPS.length - 1 ? 'Готово' : 'Далее';
+  }
+  /* Показать текст шага в видимой подсказке (с короткой подсветкой смены). */
   function fill(i) {
-    var s = STEPS[i], d = drv;
-    d.title.innerHTML = ic(s.icon) + '<span>' + s.title + '</span>';
-    d.body.innerHTML = s.text + (s.note ? '<span class="lb-note">' + s.note + '</span>' : '');
-    d.body.scrollTop = 0;
-    d.progress.textContent = (i + 1) + ' из ' + STEPS.length;
-    d.prev.style.display = i === 0 ? 'none' : '';
-    d.next.textContent = i === STEPS.length - 1 ? 'Готово' : 'Далее';
+    var d = drv, changed = d.shown !== i;
+    fillNodes(d.pop, i); d.shown = i;
+    if (changed && d.shownOnce) { d.pop.classList.remove('lb-swap'); void d.pop.offsetWidth; d.pop.classList.add('lb-swap'); }
+    d.shownOnce = true;
   }
   function setHole(r) {
     var h = drv.hole;
@@ -288,11 +302,12 @@
     h.setAttribute('rx', Math.min(8, (b - t) / 2));
     drv.rect = r;
   }
-  function measure(W) {
-    var p = drv.pop;
-    p.style.width = W + 'px'; p.style.maxHeight = 'none'; p.style.left = '-9999px'; p.style.top = '0px'; p.classList.remove('lb-sheet');
-    var body = drv.body; body.style.maxHeight = '';
-    return p.offsetHeight;
+  function measure(W, sheet) {
+    var g = drv.ghost;
+    if (g.getAttribute('data-step') !== String(drv.cur)) { fillNodes(g, drv.cur); g.setAttribute('data-step', drv.cur); }
+    g.classList.toggle('lb-sheet', !!sheet);
+    g.style.width = W + 'px'; g.style.maxHeight = 'none';
+    return g.offsetHeight;
   }
   /* Выбор положения без прокрутки: полностью помещается → частично с прокруткой текста → нижняя панель. */
   function choose(r, W, H, v, pref) {
@@ -316,7 +331,12 @@
     p.setAttribute('data-side', plan.side);
     if (!center && r) {
       var side = sheet ? (plan.where === 'top' ? 'top' : 'bottom') : plan.side; // «bottom» = подсказка под целью, стрелка вверху
-      a.className = 'lb-arrow lb-arrow-' + side;
+      var cls = 'lb-arrow lb-arrow-' + side;
+      if (a.className !== cls) { /* стрелка меняет сторону: на миг гасим, чтобы она не прыгала */
+        var firstTime = a.className === 'lb-arrow';
+        a.className = cls;
+        if (!firstTime) { a.style.transition = 'none'; a.style.opacity = '0'; clearTimeout(drv.arrowT); drv.arrowT = setTimeout(function () { a.style.transition = ''; a.style.opacity = ''; }, 260); }
+      }
       if (side === 'top' || side === 'bottom') {
         var ax = clamp((r.l + r.r) / 2 - plan.x, 20, plan.w - 20);
         a.style.left = (ax - 1) + 'px'; a.style.top = ''; /* −1: рамка подсказки */
@@ -325,7 +345,6 @@
         a.style.top = (ay - 1) + 'px'; a.style.left = '';
       }
     }
-    p.setAttribute('data-ready', '1');
   }
   /* Нижняя панель (или верхняя, если цель в нижней части окна, например лента месяцев). */
   function sheetPlan(v, H, where) {
@@ -334,7 +353,7 @@
   }
   /* Выбор: панель снизу или сверху. Цель сдвигается прокруткой так, чтобы вырез остался вне панели. */
   function placeSheet(el, r, v, Ws) {
-    var H = measure(Ws), h = Math.min(H, Math.max(MINH, Math.floor(v.h * 0.5)));
+    var H = measure(Ws, true), h = Math.min(H, Math.max(MINH, Math.floor(v.h * 0.5)));
     var snap = snapshot(el), best = null;
     var opts = (r.t + r.b) / 2 > v.h / 2 ? ['top', 'bottom'] : ['bottom', 'top'];
     for (var k = 0; k < opts.length; k++) {
@@ -367,7 +386,7 @@
       var n = resolveTarget(i);
       if (n) {
         var k = sig(n);
-        if (n === node && k === prev) { if (Date.now() - since >= 130) return n; }
+        if (n === node && k === prev) { if (Date.now() - since >= 100) return n; }
         else { node = n; prev = k; since = Date.now(); }
       } else { node = null; prev = null; }
       await frame();
@@ -375,26 +394,22 @@
     return resolveTarget(i);
   }
 
-  /* Полный расчёт шага: ждём цель, прокручиваем, ищем положение подсказки (при необходимости сдвигаем цель). */
+  /* Расчёт шага без показа: ждём цель, подбираем прокрутку и положение подсказки (при необходимости сдвигаем цель).
+     Всё считается синхронно, без перерисовок между замерами, поэтому на экране промежуточных положений не видно.
+     Возвращает итог и начальное/конечное положение прокруток для плавной анимации. */
   async function layoutStep(i, my) {
     var d = drv, s = STEPS[i], v = viewport();
     var sheetMode = v.h < SHEET_BELOW;
     var Wn = Math.min(380, v.w - 32), Ws = Math.min(v.w - 2 * M, 720);
-    d.pop.setAttribute('data-ready', '0');
-    if (!s.el) {
-      setHole(null);
-      var Hc = measure(Wn); apply(centerPlan(v, Wn, Hc), Wn, null); return;
-    }
+    var centered = function () { return { plan: centerPlan(v, Wn, measure(Wn, false)), W: Wn, r: null, el: null }; };
+    if (!s.el) return centered();
     var el = await stable(i, 3000);
-    if (my !== d.gen) return;
-    if (!el) { setHole(null); var H0 = measure(Wn); apply(centerPlan(v, Wn, H0), Wn, null); return; }
+    if (my !== d.gen) return null;
+    if (!el) return centered();
+    var from = snapshot(el);
     reveal(el, s);
-    await frames(2);
-    el = resolveTarget(i) || el;
-    reveal(el, s); await frames(1);
-    if (my !== d.gen) return;
-    var r = visibleRect(el), W = sheetMode ? Ws : Wn, H = measure(W), plan = null;
-    if (r.empty) { setHole(null); apply(centerPlan(v, Wn, measure(Wn)), Wn, null); return; }
+    var r = visibleRect(el), W = sheetMode ? Ws : Wn, H = measure(W, sheetMode), plan = null;
+    if (r.empty) return centered();
     if (sheetMode) {
       var sp = placeSheet(el, r, v, Ws); plan = sp.plan; r = sp.r;
     } else {
@@ -422,43 +437,83 @@
           else if (base) { plan = base; r = rr0; }
         }
         if (!plan) { r = visibleRect(el); plan = null; }
-      } else { /* уже помещается */ }
+      }
     }
-    if (!plan) { /* ни одна сторона не годится — нижняя панель */
+    if (!plan) { /* ни одна сторона не годится — панель сверху или снизу */
       var sp2 = placeSheet(el, visibleRect(el), v, Ws); plan = sp2.plan; r = sp2.r;
       W = Ws;
     }
-    await frames(2);
-    el = resolveTarget(i) || el;
     r = visibleRect(el);
-    if (my !== d.gen) return;
-    /* при пересчёте после прокрутки положение подсказки уточняем под фактический вырез */
+    /* положение подсказки уточняем под фактический вырез */
     var finalPlan;
-    if (plan.side === 'sheet') finalPlan = sheetPlan(v, measure(Ws), plan.where);
+    if (plan.side === 'sheet') finalPlan = sheetPlan(v, measure(Ws, true), plan.where);
     else {
-      var Hf = measure(W), cf = sides(r, W, Hf, v)[plan.side];
+      var Hf = measure(W, false), cf = sides(r, W, Hf, v)[plan.side];
       var okSide = (plan.side === 'top' || plan.side === 'bottom') ? cf.avail >= MINH : cf.ok;
-      finalPlan = okSide ? cf : (choose(r, W, Hf, v, s.side) || sheetPlan(v, measure(Ws), 'bottom'));
+      finalPlan = okSide ? cf : (choose(r, W, Hf, v, s.side) || sheetPlan(v, measure(Ws, true), 'bottom'));
     }
     if (finalPlan.side !== 'sheet') finalPlan.w = W;
     finalPlan.w = finalPlan.w || W;
-    setHole(r);
-    apply(finalPlan, W, r);
-    d.plan = finalPlan; d.W = W;
+    return { plan: finalPlan, W: finalPlan.side === 'sheet' ? Ws : W, r: r, el: el, from: from, to: snapshot(el) };
+  }
+
+  var ease = function (p) { return p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; };
+  var reduceMotion = function () { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } };
+  function mixRect(a, b, e) {
+    var l = a.l + (b.l - a.l) * e, t = a.t + (b.t - a.t) * e, r = a.r + (b.r - a.r) * e, bt = a.b + (b.b - a.b) * e;
+    return { l: l, t: t, r: r, b: bt, w: r - l, h: bt - t, empty: false, cl: b.cl, ct: b.ct, cr: b.cr, cb: b.cb };
+  }
+  /* Плавный переход: вырез «переезжает» со старой цели на новую, контейнеры доезжают прокруткой, подсказка плывёт по CSS. */
+  async function animateTo(i, res, my) {
+    var d = drv, dur = reduceMotion() ? 0 : 320, el = res.el, old = d.rect;
+    d.animating = true;
+    fill(i);
+    apply(res.plan, res.W, res.r);
+    if (!el) { /* шаг без цели: вырез схлопывается к своему центру */
+      if (old && dur) {
+        var cx = (old.l + old.r) / 2, cy = (old.t + old.b) / 2, pt = { l: cx, t: cy, r: cx, b: cy, w: 0, h: 0, empty: false };
+        var t0 = performance.now();
+        await new Promise(function (done) { (function st(now) {
+          if (my !== d.gen || !drv) return done();
+          var p = Math.min(1, (now - t0) / (dur * .8)); setHole(mixRect(old, pt, ease(p)));
+          if (p < 1) requestAnimationFrame(st); else done(); })(t0); });
+      }
+      if (my !== d.gen || !drv) return;
+      setHole(null); d.animating = false; return;
+    }
+    var live0 = res.r, start = old;
+    if (!start) { var px = (live0.l + live0.r) / 2, py = (live0.t + live0.b) / 2; start = { l: px, t: py, r: px, b: py, w: 0, h: 0, empty: false }; }
+    var from = res.from, to = res.to;
+    var t1 = performance.now();
+    await new Promise(function (done) { (function st(now) {
+      if (my !== d.gen || !drv) return done();
+      var p = dur ? Math.min(1, (now - t1) / dur) : 1, e = ease(p);
+      from.forEach(function (f, k) { var t = to[k]; if (t && t[0] === f[0]) { f[0].scrollLeft = f[1] + (t[1] - f[1]) * e; f[0].scrollTop = f[2] + (t[2] - f[2]) * e; } });
+      /* вырез едет по заранее посчитанной траектории (старая рамка → итоговая) с той же кривой, что и прокрутка.
+         Живая рамка цели здесь не годится: пока контейнер ещё не доехал, цель может быть вне видимой области. */
+      setHole(mixRect(start, live0, e));
+      if (p < 1) requestAnimationFrame(st); else done(); })(t1); });
+    if (my !== d.gen || !drv) return;
+    restore(to);
+    var fin = visibleRect(resolveTarget(i) || el); setHole(fin);
+    d.animating = false;
   }
 
   async function show(i) {
     var d = drv; if (!d) return;
-    var my = ++d.gen; d.cur = i; d.planning = true;
+    var my = ++d.gen; d.cur = i; d.planning = true; d.animating = false;
+    d.pop.setAttribute('data-ready', '0');
     var s = STEPS[i];
-    d.pop.setAttribute('data-ready', '0'); d.pop.classList.add('lb-busy'); setHole(null);
-    fill(i);
     if (s.prep) await s.prep();
     if (my !== d.gen || !drv) return;
-    fill(i);
-    await layoutStep(i, my);
+    var res = await layoutStep(i, my);
+    if (my !== d.gen || !drv || !res) return;
+    await animateTo(i, res, my);
     if (my !== d.gen || !drv) return;
-    d.pop.classList.remove('lb-busy'); d.planning = false;
+    d.plan = res.plan; d.W = res.W; d.drawIdx = res.el ? i : -1;
+    d.planning = false;
+    d.pop.setAttribute('data-ready', '1');
+    if (d.pop.classList.contains('lb-pop-init')) requestAnimationFrame(function () { requestAnimationFrame(function () { if (drv) drv.pop.classList.remove('lb-pop-init'); }); });
     try { d.next.focus({ preventScroll: true }); } catch (e) {}
     watch(i);
   }
@@ -472,7 +527,13 @@
   function tick() {
     var d = drv; if (!d) return;
     d.raf = requestAnimationFrame(tick);
-    if (d.planning || d.cur < 0) return;
+    if (d.planning) {
+      if (d.animating || d.drawIdx == null || d.drawIdx < 0) return;
+      var oe = resolveTarget(d.drawIdx);
+      if (oe) { var orr = visibleRect(oe); if (!orr.empty) setHole(orr); }
+      return;
+    }
+    if (d.cur < 0) return;
     var i = d.cur, s = STEPS[i]; if (!s.el) return;
     var el = resolveTarget(i);
     if (!el) { d.lost = (d.lost || 0) + 1; if (d.lost > 3 && !d.replan) schedule(0); return; }
@@ -484,8 +545,8 @@
       var big = o && (Math.abs(r.w - o.w) > 1.5 || Math.abs(r.h - o.h) > 1.5);
       setHole(r);
       if (d.plan) {
-        var v = viewport(), W = d.W, H = measure(W), plan = d.plan.side === 'sheet' ? sheetPlan(v, H, d.plan.where) : choose(r, W, H, v, s.side);
-        if (!plan) plan = sheetPlan(v, measure(Math.min(v.w - 2 * M, 720)), 'bottom');
+        var v = viewport(), W = d.W, sh = d.plan.side === 'sheet', H = measure(W, sh), plan = sh ? sheetPlan(v, H, d.plan.where) : choose(r, W, H, v, s.side);
+        if (!plan) plan = sheetPlan(v, measure(Math.min(v.w - 2 * M, 720), true), 'bottom');
         if (plan.side !== 'sheet') plan.w = W;
         apply(plan, W, r); d.plan = plan;
         if (big && !d.replan) schedule(150); // размер цели поменялся: пересчитать прокрутку и сторону
@@ -519,7 +580,7 @@
     if (d.ro) d.ro.disconnect(); if (d.mo) d.mo.disconnect();
     window.removeEventListener('resize', onResize); document.removeEventListener('keydown', onKey, true);
     if (window.visualViewport) window.visualViewport.removeEventListener('resize', onResize);
-    d.ov.remove(); d.pop.remove();
+    d.ov.remove(); d.pop.remove(); if (d.ghost) d.ghost.remove();
     document.body.classList.remove('lb-touring');
     var b = $('[data-tour-start]'); if (b) { try { b.focus({ preventScroll: true }); } catch (e) {} }
   }
@@ -527,7 +588,7 @@
     if (busy) return;
     busy = true;
     var parts = build();
-    drv = Object.assign(parts, { gen: 0, cur: -1, planning: true, rect: null, plan: null });
+    drv = Object.assign(parts, { gen: 0, cur: -1, planning: true, rect: null, plan: null, drawIdx: -1, shown: -1 });
     drv.next.addEventListener('click', function () { var i = drv.cur; if (i === STEPS.length - 1) destroy(); else show(i + 1); });
     drv.prev.addEventListener('click', function () { if (drv.cur > 0) show(drv.cur - 1); });
     drv.close.addEventListener('click', destroy);

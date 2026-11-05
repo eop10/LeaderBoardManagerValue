@@ -1,17 +1,27 @@
 /* Тур «Как пользоваться»: затемнение с вырезом и подсказка (собственная реализация, без driver.js) */
-.lb-ov{position:fixed;inset:0;z-index:10000;cursor:default}
+.lb-ov{position:fixed;inset:0;z-index:10000;cursor:default;animation:lb-fade .22s ease-out}
 .lb-ov svg{display:block;width:100%;height:100%}
 .lb-pop{
   position:fixed;z-index:10001;box-sizing:border-box;display:flex;flex-direction:column;
   font-family:'Hanken Grotesk',system-ui,sans-serif;color:#181c1e;
   background:#ffffff;border:1px solid #dde3e7;border-radius:12px;
-  padding:18px 20px 16px;min-width:0;max-width:380px;
+  padding:18px 20px 16px;min-width:0;max-width:none;
   box-shadow:0 12px 32px rgba(24,28,30,.18);
+  /* подсказка плавно «переезжает» к новой цели */
+  transition:left .32s cubic-bezier(.65,0,.35,1),top .32s cubic-bezier(.65,0,.35,1),width .32s cubic-bezier(.65,0,.35,1),max-height .32s cubic-bezier(.65,0,.35,1),padding .32s cubic-bezier(.65,0,.35,1);
+  animation:lb-fade .22s ease-out;
 }
-.lb-pop.lb-sheet{max-width:720px;padding:14px 20px 14px}
-.lb-pop.lb-busy{visibility:hidden}
+.lb-pop.lb-pop-init{transition:none}
+.lb-pop.lb-swap .lb-pop-title,.lb-pop.lb-swap .lb-pop-body{animation:lb-fade .26s ease-out}
+/* невидимая копия для измерения высоты текста */
+.lb-pop.lb-ghost{visibility:hidden;pointer-events:none;left:-9999px;top:0;transition:none;animation:none}
+@keyframes lb-fade{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){
+  .lb-ov,.lb-pop,.lb-pop *{animation:none !important;transition:none !important}
+}
+.lb-pop.lb-sheet{padding:14px 20px 14px}
 .lb-pop *{box-sizing:border-box}
-.lb-pop .lb-arrow{position:absolute;width:14px;height:14px;background:#fff;transform:rotate(45deg);pointer-events:none}
+.lb-pop .lb-arrow{position:absolute;width:14px;height:14px;background:#fff;transform:rotate(45deg);pointer-events:none;transition:opacity .15s ease-out,left .32s cubic-bezier(.65,0,.35,1),top .32s cubic-bezier(.65,0,.35,1)}
 .lb-pop .lb-arrow-bottom{top:-8px;margin-left:-7px;border-left:1px solid #dde3e7;border-top:1px solid #dde3e7}   /* подсказка под целью */
 .lb-pop .lb-arrow-top{bottom:-8px;margin-left:-7px;border-right:1px solid #dde3e7;border-bottom:1px solid #dde3e7}  /* подсказка над целью */
 .lb-pop .lb-arrow-right{left:-8px;margin-top:-7px;border-left:1px solid #dde3e7;border-bottom:1px solid #dde3e7}   /* подсказка справа от цели */
