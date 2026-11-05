@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
+<link rel="stylesheet" href="./tour/driver.css">
+<link rel="stylesheet" href="./tour/tour.css">
 </head>
 <body>
 <x-dc>
@@ -63,6 +65,7 @@ button{font-family:inherit;}
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <button type="button" data-tour-start class="lb-tour-btn"><span class="ms">help</span>Как пользоваться</button>
           <sc-if value="{{ isDraft }}" hint-placeholder-val="{{ false }}">
             <sc-if value="{{ draftSaved }}" hint-placeholder-val="{{ false }}">
               <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#006d30;font-weight:600;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">check_circle</span>Черновик сохранён</span>
@@ -1172,5 +1175,7 @@ class Component extends DCLogic {
   }
 }
 </script>
+<script src="./tour/driver.js.iife.js"></script>
+<script src="./tour/tour.js"></script>
 </body>
 </html>
