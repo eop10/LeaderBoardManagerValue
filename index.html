@@ -44,10 +44,10 @@ button{font-family:inherit;}
 
   <main style="flex:1;min-width:0;display:flex;flex-direction:column;height:100%;">
     <div style="flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;">
-    <header style="display:flex;flex-direction:column;gap:18px;padding:28px 32px 16px;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px 24px;flex-wrap:wrap;">
-        <div style="flex:1 1 320px;display:flex;flex-direction:column;gap:10px;min-width:0;">
-          <h1 style="margin:0;font-family:Manrope,sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.01em;line-height:1.2;">Оценка наставников</h1>
+    <header style="display:flex;flex-direction:column;gap:10px;padding:14px 24px 10px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px 24px;flex-wrap:wrap;">
+        <div style="flex:1 1 320px;min-height:44px;display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 14px;min-width:0;">
+          <h1 style="margin:0;font-family:Manrope,sans-serif;font-weight:700;font-size:24px;letter-spacing:-0.01em;line-height:1.2;">Оценка наставников</h1>
           <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
             <span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;white-space:nowrap;background:#ffffff;border:1px solid #dde3e7;font-size:13px;font-weight:600;color:#181c1e;"><span style="font-family:'Material Symbols Outlined';font-size:16px;line-height:1;text-transform:none;font-feature-settings:'liga';color:#5b6468;">calendar_month</span><span style="white-space:nowrap;">{{ periodLabel }}</span></span>
             <sc-if value="{{ chipDraft }}" hint-placeholder-val="{{ false }}">
@@ -64,37 +64,9 @@ button{font-family:inherit;}
             </sc-if>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-          <button type="button" data-tour-start class="lb-tour-btn"><span class="ms">help</span>Как пользоваться</button>
-          <sc-if value="{{ isDraft }}" hint-placeholder-val="{{ false }}">
-            <sc-if value="{{ draftSaved }}" hint-placeholder-val="{{ false }}">
-              <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#006d30;font-weight:600;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">check_circle</span>Черновик сохранён</span>
-            </sc-if>
-            <div style="position:relative;">
-              <button onClick="{{ toggleCopy }}" aria-expanded="{{ copyOpen }}" style="height:40px;padding:0 12px 0 16px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#006d30;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:6px;" style-hover="background:#f2f7f4;">Критерии из месяца<span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';">expand_more</span></button>
-              <sc-if value="{{ copyOpen }}" hint-placeholder-val="{{ false }}">
-                <div onClick="{{ closeCopy }}" style="position:fixed;inset:0;z-index:20;"></div>
-                <div role="menu" style="position:absolute;top:calc(100% + 6px);right:0;min-width:240px;max-height:340px;overflow-y:auto;background:#ffffff;border:1px solid #dde3e7;border-radius:10px;box-shadow:0 10px 30px rgba(24,28,30,0.12);padding:6px;z-index:21;display:flex;flex-direction:column;">
-                  <sc-for list="{{ copySources }}" as="src" hint-placeholder-count="3">
-                    <button role="menuitem" onClick="{{ src.onPick }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 12px;border:none;background:transparent;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;color:#181c1e;" style-hover="background:#f0f4f6;"><span style="font-weight:600;white-space:nowrap;">{{ src.name }}</span><span style="font-size:12px;color:#5b6468;white-space:nowrap;">{{ src.sub }}</span></button>
-                  </sc-for>
-                </div>
-              </sc-if>
-            </div>
-            <button onClick="{{ saveDraft }}" style="height:40px;padding:0 16px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#006d30;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#f2f7f4;">Сохранить черновик</button>
-            <sc-if value="{{ canStart }}" hint-placeholder-val="{{ false }}">
-              <button data-tour="start-eval" onClick="{{ tryStart }}" style="height:40px;padding:0 18px;border-radius:8px;background:#0E9344;border:1px solid #0E9344;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#0b7d39;">Начать оценку</button>
-            </sc-if>
-            <sc-if value="{{ cannotStart }}" hint-placeholder-val="{{ true }}">
-              <button data-tour="start-eval" disabled="{{ true }}" title="{{ startHint }}" style="height:40px;padding:0 18px;border-radius:8px;background:#d3dade;border:1px solid #d3dade;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:not-allowed;">Начать оценку</button>
-            </sc-if>
-          </sc-if>
-        </div>
-      </div>
-
-      <div style="display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;padding:12px;border-radius:10px;background:#ffffff;border:1px solid #dde3e7;">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
         <div style="position:relative;">
-          <button data-tour="season" onClick="{{ toggleYear }}" aria-haspopup="listbox" aria-expanded="{{ yearOpen }}" aria-label="Сезон" style="min-height:44px;padding:5px 8px 5px 12px;border-radius:8px;background:#ffffff;border:1px solid #cfd8dc;color:#181c1e;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:10px;text-align:left;" style-hover="border-color:#00ab4f;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';color:#5b6468;">date_range</span><span style="display:flex;flex-direction:column;gap:1px;"><span style="font-size:14px;font-weight:700;line-height:1.2;">{{ seasonBtnName }}</span><span style="font-size:12px;font-weight:500;line-height:1.2;color:#5b6468;">{{ seasonBtnSub }}</span></span><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';color:#5b6468;">expand_more</span></button>
+          <button data-tour="season" onClick="{{ toggleYear }}" aria-haspopup="listbox" aria-expanded="{{ yearOpen }}" aria-label="Сезон" style="min-height:44px;padding:5px 6px 5px 10px;border-radius:8px;background:#ffffff;border:1px solid #cfd8dc;color:#181c1e;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:10px;text-align:left;" style-hover="border-color:#00ab4f;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';color:#5b6468;">date_range</span><span style="display:flex;flex-direction:column;gap:1px;"><span style="font-size:14px;font-weight:700;line-height:1.2;">{{ seasonBtnName }}</span><span style="font-size:12px;font-weight:500;line-height:1.2;color:#5b6468;">{{ seasonBtnSub }}</span></span><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';color:#5b6468;">expand_more</span></button>
           <sc-if value="{{ yearOpen }}" hint-placeholder-val="{{ false }}">
             <div onClick="{{ closeYear }}" style="position:fixed;inset:0;z-index:20;"></div>
             <div role="listbox" aria-label="Сезон" style="position:absolute;top:calc(100% + 6px);left:0;min-width:300px;background:#ffffff;border:1px solid #dde3e7;border-radius:10px;box-shadow:0 10px 30px rgba(24,28,30,0.12);padding:6px;z-index:21;display:flex;flex-direction:column;">
@@ -108,15 +80,41 @@ button{font-family:inherit;}
             </div>
           </sc-if>
         </div>
+          <sc-if value="{{ isDraft }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ draftSaved }}" hint-placeholder-val="{{ false }}">
+              <span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#006d30;font-weight:600;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">check_circle</span>Черновик сохранён</span>
+            </sc-if>
+            <div style="position:relative;">
+              <button onClick="{{ toggleCopy }}" aria-expanded="{{ copyOpen }}" style="height:40px;padding:0 10px 0 12px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#006d30;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:6px;" style-hover="background:#f2f7f4;">Критерии из месяца<span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';">expand_more</span></button>
+              <sc-if value="{{ copyOpen }}" hint-placeholder-val="{{ false }}">
+                <div onClick="{{ closeCopy }}" style="position:fixed;inset:0;z-index:20;"></div>
+                <div role="menu" style="position:absolute;top:calc(100% + 6px);right:0;min-width:240px;max-height:340px;overflow-y:auto;background:#ffffff;border:1px solid #dde3e7;border-radius:10px;box-shadow:0 10px 30px rgba(24,28,30,0.12);padding:6px;z-index:21;display:flex;flex-direction:column;">
+                  <sc-for list="{{ copySources }}" as="src" hint-placeholder-count="3">
+                    <button role="menuitem" onClick="{{ src.onPick }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 12px;border:none;background:transparent;border-radius:6px;cursor:pointer;text-align:left;font-size:14px;color:#181c1e;" style-hover="background:#f0f4f6;"><span style="font-weight:600;white-space:nowrap;">{{ src.name }}</span><span style="font-size:12px;color:#5b6468;white-space:nowrap;">{{ src.sub }}</span></button>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+            <button onClick="{{ saveDraft }}" style="height:40px;padding:0 12px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#006d30;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#f2f7f4;">Сохранить черновик</button>
+            <sc-if value="{{ canStart }}" hint-placeholder-val="{{ false }}">
+              <button data-tour="start-eval" onClick="{{ tryStart }}" style="height:40px;padding:0 12px;border-radius:8px;background:#0E9344;border:1px solid #0E9344;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#0b7d39;">Начать оценку</button>
+            </sc-if>
+            <sc-if value="{{ cannotStart }}" hint-placeholder-val="{{ true }}">
+              <button data-tour="start-eval" disabled="{{ true }}" title="{{ startHint }}" style="height:40px;padding:0 12px;border-radius:8px;background:#d3dade;border:1px solid #d3dade;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;cursor:not-allowed;">Начать оценку</button>
+            </sc-if>
+          </sc-if>
+          <button type="button" data-tour-start class="lb-tour-btn"><span class="ms">help</span>Как пользоваться</button>
+        </div>
       </div>
+
     </header>
 
-    <section style="flex:1;min-width:0;min-height:{{ sectionMinH }};padding:0 32px 28px;display:flex;flex-direction:column;gap:14px;">
+    <section style="flex:1;min-width:0;min-height:{{ sectionMinH }};padding:0 24px 12px;display:flex;flex-direction:column;gap:10px;">
       <sc-if value="{{ isActive }}" hint-placeholder-val="{{ true }}">
-        <div data-tour="deadline" style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;background:#e1f4e8;color:#0b5a2a;font-size:14px;font-weight:600;line-height:1.45;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';flex:none;">schedule</span><span style="text-wrap:pretty;">{{ activeBanner }}</span></div>
+        <div data-tour="deadline" style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:10px;background:#e1f4e8;color:#0b5a2a;font-size:14px;font-weight:600;line-height:1.45;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';flex:none;">schedule</span><span style="text-wrap:pretty;">{{ activeBanner }}</span></div>
       </sc-if>
       <sc-if value="{{ isClosed }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;background:#eceff1;color:#3f484c;font-size:14px;font-weight:600;line-height:1.45;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';flex:none;">lock</span><span style="text-wrap:pretty;">{{ closedBanner }}</span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-radius:10px;background:#eceff1;color:#3f484c;font-size:14px;font-weight:600;line-height:1.45;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';flex:none;">lock</span><span style="text-wrap:pretty;">{{ closedBanner }}</span></div>
       </sc-if>
       <sc-if value="{{ hasLost }}" hint-placeholder-val="{{ false }}">
         <div role="alert" style="display:flex;flex-direction:column;gap:6px;padding:12px 16px;border-radius:10px;background:#fff4f3;border:1px solid #f1c5c1;">
@@ -134,22 +132,9 @@ button{font-family:inherit;}
       </sc-if>
 
       <sc-if value="{{ isTable }}" hint-placeholder-val="{{ true }}">
-        <sc-if value="{{ isActive }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;min-height:28px;">
-            <div style="display:flex;align-items:center;gap:14px;">
-              <span style="font-size:14px;color:#3f484c;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ filledText }}</span>
-              <div style="width:200px;height:4px;border-radius:2px;background:#e3e8eb;overflow:hidden;"><div style="height:100%;background:#00ab4f;width:{{ progressPct }}%;transition:width 200ms;"></div></div>
-            </div>
-            <div aria-live="polite" style="display:flex;align-items:center;font-size:13px;font-weight:600;white-space:nowrap;">
-              <sc-if value="{{ indSaving }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;color:#5b6468;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">sync</span>Сохранение…</span></sc-if>
-              <sc-if value="{{ indError }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;color:#c5221f;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">error</span>{{ errText }}</span></sc-if>
-              <sc-if value="{{ indSaved }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;color:#006d30;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">cloud_done</span>{{ savedText }}</span></sc-if>
-            </div>
-          </div>
-        </sc-if>
-
-        <div data-tour="search-export" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-          <div style="position:relative;flex:0 1 340px;min-width:220px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap;">
+        <div data-tour="search-export" style="flex:1 1 600px;min-width:0;display:flex;align-items:center;gap:10px;flex-wrap:nowrap;">
+          <div style="position:relative;flex:1 1 340px;min-width:160px;max-width:340px;">
             <span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#7a8489;pointer-events:none;">search</span>
             <input value="{{ q }}" onChange="{{ onSearch }}" placeholder="{{ searchPh }}" aria-label="Поиск" autoComplete="off" style="width:100%;height:38px;border-radius:8px;border:1px solid #cfd8dc;padding:0 36px 0 38px;font-family:inherit;font-size:14px;color:#181c1e;background:#ffffff;outline:none;" style-focus="box-shadow:0 0 0 2px #00ab4f;">
             <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}">
@@ -162,14 +147,28 @@ button{font-family:inherit;}
               <button aria-pressed="{{ sortB.pressed }}" onClick="{{ onSortRating }}" style="height:32px;padding:0 12px;border:none;border-radius:6px;background:{{ sortB.bg }};color:{{ sortB.color }};box-shadow:{{ sortB.shadow }};font-size:13px;font-weight:600;white-space:nowrap;cursor:pointer;">По рейтингу</button>
             </div>
           </sc-if>
-          <button onClick="{{ onExport }}" style="height:38px;padding:0 14px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#006d30;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-left:auto;" style-hover="background:#f2f7f4;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';">download</span>Экспорт CSV</button>
+          <button onClick="{{ onExport }}" style="height:38px;padding:0 12px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#006d30;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-left:auto;" style-hover="background:#f2f7f4;"><span style="font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';">download</span>Экспорт CSV</button>
+        </div>
+        <sc-if value="{{ isActive }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:2px;margin-left:auto;">
+            <span style="font-size:14px;line-height:20px;color:#3f484c;font-variant-numeric:tabular-nums;white-space:nowrap;">{{ filledText }}</span>
+            <div style="display:flex;align-items:center;justify-content:flex-end;gap:10px;min-height:18px;">
+              <div style="width:96px;height:4px;border-radius:2px;background:#e3e8eb;overflow:hidden;flex:none;"><div style="height:100%;background:#00ab4f;width:{{ progressPct }}%;transition:width 200ms;"></div></div>
+            <div aria-live="polite" style="display:flex;align-items:center;font-size:13px;font-weight:600;white-space:nowrap;">
+              <sc-if value="{{ indSaving }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;color:#5b6468;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">sync</span>Сохранение…</span></sc-if>
+              <sc-if value="{{ indError }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;color:#c5221f;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">error</span>{{ errText }}</span></sc-if>
+              <sc-if value="{{ indSaved }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;color:#006d30;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">cloud_done</span>{{ savedText }}</span></sc-if>
+            </div>
+            </div>
+          </div>
+        </sc-if>
         </div>
 
         <sc-if value="{{ showMonthGrid }}" hint-placeholder-val="{{ true }}">
         <div style="flex:0 1 auto;min-height:200px;background:#ffffff;border:1px solid #d5dde2;border-radius:10px;overflow:auto;">
           <div role="table" style="min-width:{{ tableMinWidth }}px;font-size:14px;">
             <div role="row" style="display:flex;background:#f0f4f6;border-bottom:1px solid #d5dde2;position:sticky;top:0;z-index:5;">
-              <div role="columnheader" style="position:sticky;left:0;z-index:2;background:#f0f4f6;width:200px;flex:none;padding:10px 14px;display:flex;align-items:center;font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#5b6468;border-right:1px solid #d5dde2;">Наставник</div>
+              <div role="columnheader" style="position:sticky;left:0;z-index:2;background:#f0f4f6;width:156px;flex:none;padding:10px 14px;display:flex;align-items:center;font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#5b6468;border-right:1px solid #d5dde2;">Наставник</div>
               <div style="flex:1;min-width:0;display:grid;grid-template-columns:{{ innerCols }};">
                 <div role="columnheader" style="padding:10px 14px;display:flex;align-items:center;font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#5b6468;">Команда</div>
                 <sc-for list="{{ critHeads }}" as="h" hint-placeholder-count="4">
@@ -188,7 +187,7 @@ button{font-family:inherit;}
             <sc-for list="{{ mentors }}" as="m" hint-placeholder-count="6">
               <div role="rowgroup" style="border-bottom:1px solid #c3cdd3;">
                 <div style="display:flex;">
-                  <div role="rowheader" style="position:sticky;left:0;z-index:2;width:200px;flex:none;padding:13px 14px;border-right:1px solid #d5dde2;background:#fafbfc;font-weight:700;font-size:14px;line-height:1.35;">{{ m.name }}</div>
+                  <div role="rowheader" style="position:sticky;left:0;z-index:2;width:156px;flex:none;padding:13px 14px;border-right:1px solid #d5dde2;background:#fafbfc;font-weight:700;font-size:14px;line-height:1.35;">{{ m.name }}</div>
                   <div style="flex:1;min-width:0;">
                     <sc-for list="{{ m.rows }}" as="r" hint-placeholder-count="2">
                       <div role="row" style="display:grid;grid-template-columns:{{ innerCols }};min-height:48px;border-bottom:1px solid #e6ebee;">
@@ -326,7 +325,7 @@ button{font-family:inherit;}
             <sc-if value="{{ showMinErr }}" hint-placeholder-val="{{ false }}">
               <span style="font-size:13px;color:#c5221f;font-weight:600;">Нужен хотя бы один критерий</span>
             </sc-if>
-            <button onClick="{{ addCrit }}" style="align-self:flex-start;height:40px;padding:0 16px;border-radius:8px;background:transparent;border:1px dashed #0E9344;color:#0E9344;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#eef8f1;">+ Добавить критерий</button>
+            <button onClick="{{ addCrit }}" style="align-self:flex-start;height:40px;padding:0 16px;border-radius:8px;background:transparent;border:1px dashed #0E9344;color:#0E9344;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#eef8f1;">+ Добавить критерий</button>
           </div>
           <aside style="position:sticky;top:20px;background:#ffffff;border:1px solid #d5dde2;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px;">
             <div style="font-family:Manrope,sans-serif;font-weight:700;font-size:16px;">Сводка</div>
@@ -340,26 +339,28 @@ button{font-family:inherit;}
     </section>
     </div>
 
-    <footer style="flex:none;z-index:4;background:#ffffff;border-top:1px solid #dde3e7;padding:10px 32px;display:flex;align-items:center;gap:16px;">
+    <footer style="flex:none;z-index:4;background:#ffffff;border-top:1px solid #dde3e7;padding:6px 24px;display:flex;align-items:center;gap:14px;">
       <div style="flex:none;display:flex;flex-direction:column;gap:2px;">
-        <span style="font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#5b6468;">{{ footSeason }}</span>
+        <span style="font-size:12px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;color:#5b6468;">{{ footSeason }}</span>
         <span style="font-family:Manrope,sans-serif;font-size:14px;font-weight:700;color:#181c1e;white-space:nowrap;">{{ yearShort }}</span>
       </div>
       <div data-tour="months" role="tablist" aria-label="Месяцы сезона" style="flex:1;min-width:0;display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;padding:2px;">
-        <button data-tour="summary-tab" role="tab" aria-selected="{{ sumTab.selected }}" onClick="{{ openSummary }}" style="flex:1.5 1 0;min-width:172px;padding:7px 10px;border-radius:8px;border:1px solid {{ sumTab.border }};background:{{ sumTab.bg }};color:{{ sumTab.color }};display:flex;flex-direction:column;align-items:flex-start;gap:3px;cursor:pointer;text-align:left;" style-hover="border-color:#00ab4f;">
+        <button data-tour="summary-tab" role="tab" aria-selected="{{ sumTab.selected }}" onClick="{{ openSummary }}" style="flex:1 1 0;min-width:160px;padding:5px 10px;border-radius:8px;border:1px solid {{ sumTab.border }};background:{{ sumTab.bg }};color:{{ sumTab.color }};display:flex;flex-direction:column;align-items:flex-start;gap:3px;cursor:pointer;text-align:left;" style-hover="border-color:#00ab4f;">
           <span style="display:flex;align-items:center;gap:6px;"><span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;text-transform:none;font-feature-settings:'liga';">functions</span><span style="font-family:Manrope,sans-serif;font-weight:800;font-size:15px;line-height:1.15;white-space:nowrap;">Сводка сезона</span></span>
           <span style="font-size:11px;font-weight:600;white-space:nowrap;color:{{ sumTab.subColor }};">{{ sumTab.sub }}</span>
         </button>
         <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="6">
-          <button role="tab" aria-selected="{{ t.selected }}" title="{{ t.title }}" onClick="{{ t.onClick }}" style="flex:1 1 0;min-width:86px;padding:7px 10px;border-radius:8px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.color }};display:flex;flex-direction:column;align-items:flex-start;gap:3px;cursor:pointer;text-align:left;" style-hover="border-color:#00ab4f;">
+          <button role="tab" aria-selected="{{ t.selected }}" title="{{ t.title }}" onClick="{{ t.onClick }}" style="flex:1 1 0;min-width:68px;padding:5px 8px;border-radius:8px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.color }};display:flex;flex-direction:column;align-items:flex-start;gap:3px;cursor:pointer;text-align:left;" style-hover="border-color:#00ab4f;">
             <span style="display:flex;align-items:center;justify-content:space-between;width:100%;">
               <span style="font-family:Manrope,sans-serif;font-weight:800;font-size:17px;line-height:1.1;">{{ t.name }}</span>
               <span style="width:8px;height:8px;border-radius:50%;background:{{ t.dot }};box-shadow:{{ t.dotRing }};"></span>
             </span>
-            <span style="font-size:11px;font-weight:600;white-space:nowrap;color:{{ t.subColor }};">{{ t.status }}</span>
-            <sc-if value="{{ t.hasDue }}" hint-placeholder-val="{{ false }}">
-              <span style="font-size:11px;font-weight:700;white-space:nowrap;color:{{ t.dueColor }};">{{ t.due }}</span>
-            </sc-if>
+            <span style="display:flex;flex-wrap:wrap;align-items:baseline;gap:0 6px;max-width:100%;">
+              <span style="font-size:11px;font-weight:600;white-space:nowrap;color:{{ t.subColor }};">{{ t.status }}</span>
+              <sc-if value="{{ t.hasDue }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:11px;font-weight:700;white-space:nowrap;color:{{ t.dueColor }};">{{ t.due }}</span>
+              </sc-if>
+            </span>
           </button>
         </sc-for>
       </div>
@@ -367,7 +368,7 @@ button{font-family:inherit;}
   </main>
 </div>
 
-<div style="position:fixed;right:20px;bottom:104px;z-index:30;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#181c1e;">
+<div style="position:fixed;right:20px;bottom:64px;z-index:30;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#181c1e;">
   <sc-if value="{{ demoOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ toggleDemo }}" style="position:fixed;inset:0;z-index:-1;"></div>
     <div role="listbox" aria-label="Текущая дата" style="position:absolute;right:0;bottom:calc(100% + 6px);width:240px;background:#ffffff;border:1px dashed #a3acb1;border-radius:10px;box-shadow:0 10px 30px rgba(24,28,30,0.14);padding:6px;display:flex;flex-direction:column;">
@@ -397,9 +398,9 @@ button{font-family:inherit;}
         <p style="margin:0;font-size:15px;line-height:1.55;color:#181c1e;white-space:pre-wrap;text-wrap:pretty;">{{ commentText }}</p>
       </sc-if>
       <div style="display:flex;justify-content:flex-end;gap:10px;">
-        <button onClick="{{ onModalCancel }}" style="height:40px;padding:0 16px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#3f484c;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#f0f4f6;">{{ commentCancel }}</button>
+        <button onClick="{{ onModalCancel }}" style="height:40px;padding:0 16px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#3f484c;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#f0f4f6;">{{ commentCancel }}</button>
         <sc-if value="{{ commentEditable }}" hint-placeholder-val="{{ true }}">
-          <button onClick="{{ onCommentSave }}" style="height:40px;padding:0 18px;border-radius:8px;background:#0E9344;border:1px solid #0E9344;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#0b7d39;">Сохранить</button>
+          <button onClick="{{ onCommentSave }}" style="height:40px;padding:0 18px;border-radius:8px;background:#0E9344;border:1px solid #0E9344;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#0b7d39;">Сохранить</button>
         </sc-if>
       </div>
     </div>
@@ -411,8 +412,8 @@ button{font-family:inherit;}
     <div role="dialog" aria-modal="true" onClick="{{ stop }}" style="width:460px;max-width:100%;background:#ffffff;border-radius:12px;padding:24px;display:flex;flex-direction:column;gap:20px;box-shadow:0 20px 50px rgba(24,28,30,0.25);">
       <p style="margin:0;font-size:16px;line-height:1.5;color:#181c1e;text-wrap:pretty;">{{ modalText }}</p>
       <div style="display:flex;justify-content:flex-end;gap:10px;">
-        <button onClick="{{ onModalCancel }}" style="height:40px;padding:0 16px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#3f484c;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#f0f4f6;">Отмена</button>
-        <button onClick="{{ onModalConfirm }}" style="height:40px;padding:0 18px;border-radius:8px;background:#0E9344;border:1px solid #0E9344;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#0b7d39;">{{ modalConfirm }}</button>
+        <button onClick="{{ onModalCancel }}" style="height:40px;padding:0 16px;border-radius:8px;background:#ffffff;border:1px solid #c5d3ca;color:#3f484c;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#f0f4f6;">Отмена</button>
+        <button onClick="{{ onModalConfirm }}" style="height:40px;padding:0 18px;border-radius:8px;background:#0E9344;border:1px solid #0E9344;color:#ffffff;font-size:13px;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;cursor:pointer;" style-hover="background:#0b7d39;">{{ modalConfirm }}</button>
       </div>
     </div>
   </div>
@@ -649,6 +650,8 @@ class Component extends DCLogic {
     return { months: ms, cnt, nCounted: cm.length, rows };
   }
 
+  // Сколько дней осталось ставить оценки, считая сегодняшний и последний день окна
+  daysLeft(today, last) { return Math.max(1, Math.round((last - today) / 86400000) + 1); }
   plural(n, one, few, many) {
     const m10 = n % 10, m100 = n % 100;
     if (m10 === 1 && m100 !== 11) return one;
@@ -905,7 +908,7 @@ class Component extends DCLogic {
       isTable: !isMonth || isActive || isClosed, isMonthTable: isActive || isClosed,
       chipDraft: isDraft, chipActive: isActive, chipClosed: isClosed || isSkipped, chipSummary: !isMonth,
       closedChip: isSkipped ? 'Закрыт · оценка не проводилась' : 'Закрыт',
-      activeBanner: isActive ? `Оценки за ${mnLow} можно ставить и менять до ${this.fmtLong(w.last)}. После этого они будут зафиксированы автоматически.` : '',
+      activeBanner: isActive ? `Оценки за ${mnLow} можно ставить и менять до ${this.fmtLong(w.last)}. Затем они фиксируются автоматически.` : '',
       closedBanner: isClosed ? `Оценки за ${mnLow} зафиксированы автоматически ${this.fmtLong(w.close)}, изменить их нельзя` : '',
       critHeads: [], mentors: [], draftRows: [], copySources: [], sumHeads: [], sumRows: [], lostItems: [],
       q: st.q, hasQuery: !!q,
@@ -970,7 +973,7 @@ class Component extends DCLogic {
       return {
         name: this.MS[x.i].charAt(0).toUpperCase() + this.MS[x.i].slice(1),
         status: stText, title: `${this.mLabel(x)} · ${stFull}`, selected: sel,
-        hasDue: ss === 'active', due: `до ${xw.last.getDate()} ${this.CAL_S[xw.last.getMonth()]}`,
+        hasDue: ss === 'active', due: this.daysLeft(t, xw.last) === 1 ? 'последний день' : `${this.daysLeft(t, xw.last)} дн.`,
         dueColor: sel ? '#ffffff' : '#006d30',
         bg: sel ? '#00ab4f' : '#ffffff', border: sel ? '#00ab4f' : '#dde3e7',
         color: sel ? '#ffffff' : '#181c1e', subColor: sel ? '#ffffff' : '#5b6468',
@@ -986,8 +989,8 @@ class Component extends DCLogic {
     if (v.isMonthTable) {
       const crits = s.criteria;
       const maxSum = crits.reduce((a, c) => a + c.max, 0);
-      v.innerCols = `170px repeat(${crits.length}, minmax(112px, 1fr)) 210px`;
-      v.tableMinWidth = 200 + 170 + crits.length * 112 + 210;
+      v.innerCols = `172px repeat(${crits.length}, minmax(112px, 1fr)) 210px`;
+      v.tableMinWidth = 156 + 172 + crits.length * 112 + 210;
       v.critHeads = crits.map(c => ({
         name: c.name, maxLabel: `макс ${c.max}`, desc: c.desc, tipId: 'tip-' + c.id,
         showTip: st.tip === c.id && !!c.desc,

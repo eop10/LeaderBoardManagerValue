@@ -53,7 +53,7 @@
 .lb-pop .lb-pop-btns{display:flex;gap:8px}
 .lb-pop .lb-pop-btns button{
   font-family:inherit;height:36px;padding:0 14px;border-radius:8px;
-  font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;
+  font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;
 }
 .lb-pop .lb-pop-next{background:#0E9344;border:1px solid #0E9344;color:#fff}
 .lb-pop .lb-pop-next:hover{background:#006d30;border-color:#006d30}
@@ -66,12 +66,12 @@
 .lb-pop .lb-pop-close:hover{color:#181c1e}
 .lb-pop button:focus-visible{outline:2px solid #00ab4f;outline-offset:2px}
 /* Плашка «Демо · сегодня…» во время тура скрыта: она не должна светиться поверх затемнения */
-body.lb-touring div[style*="bottom:104px"],
-body.lb-touring div[style*="bottom: 104px"]{visibility:hidden}
+body.lb-touring div[style*="bottom:64px"],
+body.lb-touring div[style*="bottom: 64px"]{visibility:hidden}
 .lb-tour-btn{
-  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:8px;
+  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-radius:8px;
   background:#fff;border:1px solid #c5d3ca;color:#006d30;cursor:pointer;
-  font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
 }
 .lb-tour-btn:hover{background:#f0f7f2}
 .lb-tour-btn .ms{font-family:'Material Symbols Outlined';font-size:20px;line-height:1;text-transform:none;font-feature-settings:'liga';font-weight:400}
@@ -80,7 +80,7 @@ body.lb-touring div[style*="bottom: 104px"]{visibility:hidden}
 body.lb-has-invite{display:flex;flex-direction:column;height:100vh;overflow:hidden}
 body.lb-has-invite #dc-root{flex:1;min-height:0}
 body.lb-has-invite #dc-root > div{height:100%}
-body.lb-has-invite #dc-root > div > div{height:100% !important}
+body.lb-has-invite #dc-root > div > div:first-child{height:100% !important}
 .lb-invite{position:relative;z-index:100;
   flex:none;display:flex;align-items:center;gap:14px;padding:10px 20px;
   background:#e1f4e8;border-bottom:1px solid #bfe3cc;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#0b5a2a;
@@ -91,7 +91,7 @@ body.lb-has-invite #dc-root > div > div{height:100% !important}
 .lb-invite-title{font-family:Manrope,sans-serif;font-weight:700;font-size:15px;color:#181c1e}
 .lb-invite-text{font-size:13px;line-height:1.45;color:#3f484c}
 .lb-invite-go{flex:none;height:36px;padding:0 16px;border-radius:8px;border:1px solid #0E9344;background:#0E9344;color:#fff;
-  font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+  font-family:inherit;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
 .lb-invite-go:hover{background:#006d30;border-color:#006d30}
 .lb-invite-x{flex:none;width:32px;height:32px;border:none;border-radius:6px;background:transparent;color:#5b6468;cursor:pointer;display:inline-flex;align-items:center;justify-content:center}
 .lb-invite-x:hover{background:rgba(24,28,30,.06);color:#181c1e}
